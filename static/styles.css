@@ -225,7 +225,9 @@ footer{
   html{ font-size:15.5px; }
 
   .main-container{ flex-direction:column; gap:10px; padding:14px 10px 36px; }
-  .left-panel, .right-panel{ width:80%; max-width:80%; padding:16px 14px 14px; border-radius:18px; }
+  .left-panel, .right-panel{ width:80%; max-width:80%; padding:16px 14px 14px; border-radius:18px; 
+    margin-left: 10px;
+    margin-right: 10px; }
 
   .main-title{ font-size:1.45rem; }
   .seating-title{ font-size:1.05rem; }
