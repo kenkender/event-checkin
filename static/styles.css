@@ -224,14 +224,14 @@ footer{
 @media (max-width: 768px){
   html{ font-size:15.5px; }
 
-  .main-container{ flex-direction:column; gap:14px; padding:14px 10px 36px; }
-  .left-panel, .right-panel{ width:100%; max-width:100%; padding:16px 14px 14px; border-radius:18px; }
+  .main-container{ flex-direction:column; gap:10px; padding:14px 10px 36px; }
+  .left-panel, .right-panel{ width:80%; max-width:80%; padding:16px 14px 14px; border-radius:18px; }
 
   .main-title{ font-size:1.45rem; }
   .seating-title{ font-size:1.05rem; }
 
   .input-container{ margin-bottom:8px; }
-  input[type="text"]{ font-size:1rem; padding:10px 12px; border-radius:10px; }
+  input[type="text"]{ font-size:1rem; padding:8px 8px; border-radius:10px; }
   .checkin-btn{ font-size:1.05rem; padding:12px 0; border-radius:12px; }
   #result{ font-size:1.05rem; }
 
