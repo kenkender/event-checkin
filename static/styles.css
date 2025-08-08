@@ -322,8 +322,8 @@ footer {
 
 #seating-map-modal {
   width: 100% !important;
-  min-height: 400px !important;
-  max-width: 1100px !important;
+  min-height: auto !important;
+  max-width: 100% !important;
   display: block;
   margin: 0 auto;
 }
@@ -343,3 +343,75 @@ footer {
   display: flex; align-items: center; justify-content: center;
 }
 .close-btn:hover { background: #9e142a; }
+
+/* ===== Mobile tuning: ปรับ UI ให้พอดีจอ ===== */
+@media (max-width: 768px) {
+  /* ย่อสเกลฟอนต์ทั้งหน้าเล็กน้อย */
+  html { font-size: 15.5px; }
+
+  .main-container {
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px 10px 36px;
+  }
+
+  /* การ์ดซ้าย/ขวาให้เต็มความกว้างมากขึ้นและเว้นขอบน้อยลง */
+  .left-panel, .right-panel {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px 14px 14px;
+    border-radius: 18px;
+  }
+
+  /* หัวข้อ */
+  .main-title { font-size: 1.45rem; }
+  .seating-title { font-size: 1.05rem; }
+
+  /* ช่องกรอก & ปุ่ม */
+  .input-container { margin-bottom: 12px; }
+  input[type="text"] {
+    font-size: 1rem;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+  .checkin-btn {
+    font-size: 1.05rem;
+    padding: 12px 0;
+    border-radius: 12px;
+  }
+
+  /* ข้อความผลลัพธ์ให้เล็กลงนิดเพื่อไม่กินพื้นที่ */
+  #result { font-size: 1.05rem; }
+
+  /* แผนผังในหน้าหลักให้พอดีจอ */
+  #seating-map {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 260px !important;
+  }
+
+  /* ปุ่มขยาย */
+  .zoom-btn { font-size: 0.95rem; padding: 6px 12px; }
+
+  /* Modal content ให้ชิดขอบจอน้อยลง และสูงน้อยลง */
+  .modal-content {
+    min-width: 94vw;
+    min-height: 66vh;
+    padding: 10px 10px 14px;
+    border-radius: 18px;
+  }
+  #seating-map-modal {
+    width: 96% !important;
+    max-width: 96vw !important;
+    min-height: 300px !important;
+  }
+}
+
+/* จอเล็กมาก (เช่น < 480px) ย่อเพิ่มอีกเล็กน้อย */
+@media (max-width: 480px) {
+  html { font-size: 14.8px; }
+  .main-title { font-size: 1.35rem; }
+  .checkin-btn { font-size: 1rem; padding: 11px 0; }
+  #result { font-size: 1rem; }
+  .modal-content { min-height: 60vh; }
+}
