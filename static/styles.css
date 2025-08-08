@@ -242,7 +242,7 @@ footer{
   .zoom-btn{ font-size:.95rem; padding:6px 12px; }
 
   /* Modal (มือถือ) */
-  .modal-content{ width:94vw; max-width:94vw; max-height:70vh; }
+  .modal-content{ width:80vw; max-width:80vw; max-height:60vh; }
 }
 
 /* จอเล็กมาก */
