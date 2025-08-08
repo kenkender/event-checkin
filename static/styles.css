@@ -251,5 +251,5 @@ footer{
   .main-title{ font-size:1.35rem; }
   .checkin-btn{ font-size:1rem; padding:11px 0; }
   #result{ font-size:1rem; }
-  .modal-content{ max-height:60vh; }
+  .modal-content{ max-height:80vh; }
 }
