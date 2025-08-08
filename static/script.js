@@ -54,23 +54,28 @@ function highlightSeat(seatId) {
 
 /* ---------- sync ไปยัง modal เมื่อเปิด ---------- */
 function syncHighlightToModal() {
-  const objMain  = document.getElementById('seating-map');
-  const objModal = document.getElementById('seating-map-modal');
-  if (!objMain || !objModal) return;
+  const svgMain = document.getElementById('seating-map');
+  const svgModal = document.getElementById('seating-map-modal');
+  if (!svgMain || !svgModal) return;
 
-  objModal.addEventListener('load', function () {
-    const docMain  = objMain.contentDocument;
-    const docModal = objModal.contentDocument;
-    if (!docMain || !docModal) return;
+  // รับ seat id จาก main
+  const svgDocMain = svgMain.contentDocument;
+  if (!svgDocMain) return;
 
-    // หา seatId ปัจจุบันจากแผนผังหลัก
-    const anyHighlighted = docMain.querySelector('.seat-highlight, .seat-bg-highlight');
-    const seatId = anyHighlighted ? anyHighlighted.id : null;
+  const highlighted = svgDocMain.querySelector('.seat-highlight, .seat-bg-highlight');
+  if (!highlighted) return;
 
-    // เคลียร์เดิมใน modal แล้วค่อยใส่ใหม่
-    clearHighlightsInDoc(docModal);
-    if (seatId) applyHighlightInDoc(docModal, seatId);
-  }, { once: true });
+  const seatId = highlighted.id;
+
+  // ถ้า modal ยังโหลดไม่เสร็จ → รอโหลดก่อน
+  if (!svgModal.contentDocument) {
+    svgModal.addEventListener('load', () => {
+      applyHighlightInDoc(svgModal.contentDocument, seatId);
+    }, { once: true });
+  } else {
+    // ถ้าโหลดแล้ว → highlight ทันที
+    applyHighlightInDoc(svgModal.contentDocument, seatId);
+  }
 }
 
 /* ---------- เช็คอิน ---------- */
