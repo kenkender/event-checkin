@@ -153,3 +153,41 @@ document.addEventListener('DOMContentLoaded', function () {
   if (closeBtn && modal) closeBtn.onclick = () => modal.classList.remove('open');
   if (modal) modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('open'); };
 });
+
+// ==== Welcome Modal (show once per browser) ====
+(function () {
+  function openWelcome() {
+    const m = document.getElementById('welcomeModal');
+    if (m) m.classList.add('open');
+  }
+  function closeWelcome() {
+    const m = document.getElementById('welcomeModal');
+    if (m) m.classList.remove('open');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('welcomeModal');
+    const btnClose = document.getElementById('welcomeClose');
+    const btnCTA = document.getElementById('welcomeCTA');
+
+    if (!modal) return; // HTML ยังไม่ได้ใส่
+
+    // โชว์ครั้งแรกของเบราว์เซอร์ (ใช้ localStorage)
+    const KEY = 'welcome_shown_v1';
+    if (!localStorage.getItem(KEY)) {
+      openWelcome();
+      localStorage.setItem(KEY, '1');
+    }
+
+    btnClose && btnClose.addEventListener('click', closeWelcome);
+    btnCTA && btnCTA.addEventListener('click', closeWelcome);
+
+    // (ตัวเลือก) ปิดเมื่อคลิกพื้นหลังนอกกล่อง
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeWelcome();
+    });
+
+    // สำหรับทดสอบ: เปิดผ่านคอนโซลได้ด้วย window.openWelcomeModal()
+    window.openWelcomeModal = openWelcome;
+  });
+})();
