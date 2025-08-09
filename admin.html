@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin | Check-in Logs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="static/styles.css" />
+  <style>
+    .admin-wrap{max-width:1200px;margin:40px auto;padding:0 16px}
+    .admin-grid{display:grid;grid-template-columns:1fr;gap:22px}
+    @media(min-width:1000px){.admin-grid{grid-template-columns:1fr 1fr}}
+    .card{background:rgba(20,34,54,.78);border:1px solid #ffe95744;border-radius:18px;padding:18px 16px;color:#eaf1fa}
+    .card h3{color:#ffe957;margin:0 0 10px}
+    table{width:100%;border-collapse:collapse;font-size:.95rem;background:#eaf1fa;color:#1d2b45;border-radius:12px;overflow:hidden}
+    th,td{padding:10px 12px;border-bottom:1px solid #d9e2f3}
+    thead th{background:#f3f6ff;text-align:left}
+    .topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .topbar input{padding:8px 10px;border-radius:10px;border:none}
+    .badge{display:inline-block;background:#ffe957;color:#1d2b45;padding:2px 8px;border-radius:999px;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="admin-wrap">
+    <div class="topbar">
+      <h2 style="color:#ffe957;margin:0">Admin Dashboard</h2>
+      <div>
+        <input id="adminKey" type="password" placeholder="Enter Admin Key" />
+        <button class="checkin-btn" id="btnLoad" style="width:auto;padding:8px 16px;border-radius:10px">
+          Load Data
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="card">
+        <h3>Check-in Logs</h3>
+        <table id="tblLogs">
+          <thead>
+            <tr>
+              <th>#</th><th>Name</th><th>Seat</th><th>Seat EN</th><th>IP</th><th>Time</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Guest List</h3>
+        <table id="tblGuests">
+          <thead>
+            <tr><th>Name (key)</th><th>Seat</th><th>Seat EN</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<script>
+const $ = (s, p=document) => p.querySelector(s);
+const $$ = (s, p=document) => [...p.querySelectorAll(s)];
+
+const keyInput = $('#adminKey');
+const btnLoad = $('#btnLoad');
+
+function getKey(){
+  return keyInput.value || localStorage.getItem('ADMIN_KEY') || '';
+}
+function saveKey(k){ localStorage.setItem('ADMIN_KEY', k); }
+
+async function fetchJSON(url){
+  const key = getKey();
+  if(!key){ alert('กรอก Admin Key ก่อน'); return null; }
+  const res = await fetch(url, { headers: { 'X-Admin-Key': key } });
+  if(!res.ok){
+    alert('Auth failed / ใส่คีย์ไม่ถูกต้อง');
+    return null;
+  }
+  return res.json();
+}
+
+btnLoad.addEventListener('click', async ()=>{
+  const k = keyInput.value.trim();
+  if(k) saveKey(k);
+
+  const logs = await fetchJSON('/api/admin/checkins');
+  const guests = await fetchJSON('/api/admin/guests');
+  if(!logs || !guests) return;
+
+  const tb1 = $('#tblLogs tbody');
+  tb1.innerHTML = logs.items.map((r, i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${r.name || '-'}</td>
+      <td>${r.seat || '-'}</td>
+      <td>${r.seat_en || '-'}</td>
+      <td>${r.ip || '-'}</td>
+      <td>${r.created_at}</td>
+    </tr>
+  `).join('');
+
+  const tb2 = $('#tblGuests tbody');
+  tb2.innerHTML = guests.items.map(g=>`
+    <tr><td>${g.name}</td><td>${g.seat}</td><td>${g.seat_en}</td></tr>
+  `).join('');
+});
+
+// auto-fill key if saved
+const saved = localStorage.getItem('ADMIN_KEY');
+if(saved){ keyInput.value = saved; }
+</script>
+</body>
+</html>
