@@ -249,3 +249,13 @@ footer{
   #result{ font-size:1rem; }
   .modal-content{ max-height:60vh; }
 }
+footer {
+  text-align: center;
+  width: 100%;
+}
+
+.footer-text {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
