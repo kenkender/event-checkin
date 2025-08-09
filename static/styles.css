@@ -238,7 +238,7 @@ footer{
   #result{ font-size:1.05rem; }
 
   /* แผนผังหน้าแรก */
-  #seating-map{ width:100% !important; max-width:100% !important; min-height:auto !important; margin-right: 8px;}
+  #seating-map{ width:100% !important; max-width:100% !important; min-height:auto !important;}
 
   /* ปุ่มขยาย */
   .zoom-btn{ font-size:.95rem; padding:6px 12px; }
