@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -41,6 +42,32 @@
       <object id="seating-map-modal" type="image/svg+xml" data="static/seating-map.svg"></object>
     </div>
   </div>
+  
+  <!-- Welcome Modal -->
+<div id="welcomeModal" class="modal-bg welcome-modal" aria-hidden="true">
+  <div class="modal-content welcome-content">
+    <button id="closeWelcomeBtn" class="close-btn" title="ปิด">✕</button>
+
+    <!-- วงแหวนเรืองแสง AI -->
+    <div class="ai-ring"></div>
+
+    <!-- โลโก้ (ถ้าอยากใช้โลโก้องค์กร) -->
+    <img src="static/โลโก้ตำรวจท่องเที่ยว.png" alt="Logo" class="welcome-logo" />
+
+    <!-- ข้อความต้อนรับ -->
+    <h3 class="welcome-title">ยินดีต้อนรับสู่<br>กองบัญชาการตำรวจท่องเที่ยว</h3>
+    <div class="welcome-sub">Welcome to Tourist Police Bureau</div>
+    <div class="welcome-event">วันสถาปนากองบัญชาการตำรวจท่องเที่ยว</div>
+
+    <!-- ปุ่มเข้าสู่ระบบเช็คอิน -->
+    <button id="enterEventBtn" class="welcome-cta ripple">
+      กดเพื่อเข้าร่วมงาน <span style="opacity:.7">|</span> Press to join the event
+    </button>
+
+    <!-- ชิมเมอร์บรรทัดล่าง -->
+    <div class="welcome-hint">กดปุ่มเพื่อเริ่มเช็คอิน / Press the button to start check‑in</div>
+  </div>
+</div>
 
   <footer>
     <span>© 2025 Tourist Police Bureau | Futuristic Check-in System by KENDO</span>

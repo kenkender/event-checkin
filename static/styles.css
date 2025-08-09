@@ -259,3 +259,90 @@ footer {
   text-align: center;
   margin: 0 auto;
 }
+
+/* ====== Welcome Modal (AI 2025) ====== */
+.welcome-modal.modal-bg { /* ใช้พื้นหลังเดิมแต่เติม effect */
+  background: radial-gradient(1200px 800px at 50% 10%, rgba(40,70,120,.35), transparent 60%),
+              linear-gradient(180deg, rgba(10,19,40,.92) 0%, rgba(10,19,40,.88) 100%);
+}
+
+.welcome-content {
+  width: min(92vw, 720px);
+  max-height: 90vh;
+  overflow: auto;
+  background: linear-gradient(180deg, #eaf1fa 0%, #eef4ff 100%);
+  border: 1.5px solid #ffe95766;
+  position: relative;
+  isolation: isolate;            /* ให้ pseudo ซ้อนชั้นสวย */
+  animation: popIn .38s cubic-bezier(.2,.85,.25,1) both;
+}
+
+/* วงแหวนเรืองแสง AI */
+.ai-ring{
+  position:absolute; inset: -120px -80px auto auto;
+  width: 280px; height: 280px; border-radius: 50%;
+  background:
+    conic-gradient(from 0deg, #ffe957, #e32c2c, #5792ff, #ffe957);
+  filter: blur(36px) saturate(150%);
+  opacity: .35;
+  animation: ringSpin 8s linear infinite;
+  z-index: -1;
+}
+
+/* โลโก้ */
+.welcome-logo{
+  width: 92px; margin: 6px auto 10px; display:block;
+  filter: drop-shadow(0 0 26px #ffe95788);
+  animation: logoFloat 3.8s ease-in-out infinite;
+}
+
+/* ข้อความ */
+.welcome-title{
+  margin: 4px 0 4px;
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+  text-align:center;
+  color:#12223e;
+  letter-spacing:.6px;
+}
+.welcome-sub{
+  text-align:center; font-size: clamp(1rem, 2vw, 1.2rem);
+  color:#2a3e65; opacity:.95; margin-bottom: 6px;
+  background: linear-gradient(90deg, #e32c2c, #ffe957, #5792ff);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3.2s linear infinite;
+}
+.welcome-event{
+  text-align:center; font-size: clamp(1rem, 2.1vw, 1.24rem);
+  color:#e32c2c; font-weight: 700; letter-spacing:.4px; margin-bottom: 14px;
+}
+
+/* ปุ่ม CTA */
+.welcome-cta{
+  width: min(90%, 520px);
+  margin: 10px auto 8px; display:flex; align-items:center; justify-content:center; gap:10px;
+  padding: 14px 16px; border-radius: 14px; border: none; cursor: pointer;
+  font-size: 1.05rem; font-weight: 800; letter-spacing:.3px;
+  color:#141414;
+  background: linear-gradient(90deg, #ffe957 0%, #ffc83d 50%, #ffe957 100%);
+  box-shadow: 0 6px 28px #ffe95755, inset 0 0 0 2px #14141418;
+  transition: transform .08s ease, box-shadow .2s ease;
+}
+.welcome-cta:hover{ transform: translateY(-1px) scale(1.02); box-shadow: 0 10px 36px #ffe95766, inset 0 0 0 2px #14141422; }
+.welcome-cta:active{ transform: scale(.98); }
+
+.welcome-hint{
+  text-align:center; font-size: .95rem; color:#2b3a58; opacity:.85; margin-top: 4px;
+}
+
+/* Animations */
+@keyframes popIn { from{opacity:0; transform: translateY(22px) scale(.98);} to{opacity:1; transform:none;} }
+@keyframes shimmer { from{ background-position: 0% 50%; } to{ background-position: 200% 50%; } }
+@keyframes ringSpin { to { transform: rotate(360deg); } }
+@keyframes logoFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-6px);} }
+
+/* มือถือ: โมดัลเริ่มชิดบน + ใช้งานง่าย */
+@media (max-width: 768px){
+  .welcome-modal.modal-bg{ align-items:flex-start; padding-top: 8vh; }
+  .welcome-content{ width: 94vw; }
+}
