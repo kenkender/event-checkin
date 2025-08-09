@@ -32,7 +32,7 @@ html, body{
   padding:40px 22px 28px; align-items:flex-start;
 }
 
-.logo{ width:98px; margin-bottom:8px; filter:drop-shadow(0 0 40px #ffe95799); animation:logoGlow 2.5s infinite alternate; }
+.logo{ width:98px; margin-bottom:8px; filter:drop-shadow(0 0 40px #ffe95799); animation:logoGlow 1.5s infinite alternate; }
 @keyframes logoGlow{ 0%{filter:drop-shadow(0 0 12px #ffe95788);} 100%{filter:drop-shadow(0 0 44px #ffe957);} }
 
 h2{ margin:12px 0 6px; font-size:2.2rem; font-weight:700; color:#ffe957; text-shadow:0 2px 8px #0d1931; text-align:center; }
@@ -78,11 +78,11 @@ input[type="text"]:focus{ box-shadow:0 4px 10px #ffe957bb; }
 
 /* Highlight ใน SVG */
 @keyframes seat-blink{
-  0%{stroke:#b2c0ff; filter:drop-shadow(0 0 16px #ffe957cc);}
+  0%{stroke:#b2c0ff; filter:drop-shadow(0 0 16px #579affcc);}
   40%{stroke:#ff5b5b; filter:drop-shadow(0 0 32px #e32c2ccc);}
-  60%{stroke:#5792ff; filter:drop-shadow(0 0 42px #ffe957ff);}
-  80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #ffe957cc);}
-  100%{stroke:#144bfd; filter:drop-shadow(0 0 16px #ffe957cc);}
+  60%{stroke:#5792ff; filter:drop-shadow(0 0 42px rgb(87, 132, 255));}
+  80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #ff5757cc);}
+  100%{stroke:#144bfd; filter:drop-shadow(0 0 16px #5776ffcc);}
 }
 .seat-highlight{ stroke:#fd5959 !important; stroke-width:7px !important; filter:drop-shadow(0 0 22px #577effcc); animation:seat-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate; }
 
@@ -117,12 +117,12 @@ footer{
 /* Mobile                                                                     */
 /* ========================================================================== */
 @media (max-width:768px){
-  html{ font-size:15.5px; }
+  html{ font-size:14.5px; }
 
-  .main-container{ flex-direction:column; gap:14px; padding:14px 10px 36px; }
-  .left-panel,.right-panel{ width:100%; max-width:100%; padding:16px 14px 14px; border-radius:18px; }
+  .main-container{ flex-direction:column; gap:10px; padding:14px 10px 36px; }
+  .left-panel,.right-panel{ width:100%; max-width:100%; padding:13px 11px 11px; border-radius:15px; }
 
-  .main-title{ font-size:1.45rem; }
+  .main-title{ font-size:1.35rem; }
 
   /* จัดหัวข้อให้กลางจริง ๆ */
   .seating-title{
