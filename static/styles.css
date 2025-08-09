@@ -195,7 +195,7 @@ footer{
 .welcome-modal.open{ display:flex; }
 
 .welcome-card{
-  position:relative; width:min(780px,92vw); background:#eaf1fa; border-radius:20px;
+  position:relative; width:min(600px,88vw); background:#aed0fd; border-radius:20px;
   padding:28px 24px 22px; box-shadow:0 20px 80px rgba(0,0,0,.25); overflow:hidden;
 }
 .welcome-close{
