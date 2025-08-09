@@ -166,28 +166,47 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('welcomeModal');
-    const btnClose = document.getElementById('welcomeClose');
-    const btnCTA = document.getElementById('welcomeCTA');
+    const modal   = document.getElementById('welcomeModal');
+    const btnClose= document.getElementById('welcomeClose');
+    const btnCTA  = document.getElementById('welcomeCTA');
 
-    if (!modal) return; // HTML ยังไม่ได้ใส่
+    if (!modal) return;
 
-    // โชว์ครั้งแรกของเบราว์เซอร์ (ใช้ localStorage)
+    // โชว์ครั้งแรกของเบราว์เซอร์
     const KEY = 'welcome_shown_v1';
     if (!localStorage.getItem(KEY)) {
       openWelcome();
       localStorage.setItem(KEY, '1');
     }
 
-    btnClose && btnClose.addEventListener('click', closeWelcome);
-    btnCTA && btnCTA.addEventListener('click', closeWelcome);
+    btnClose && btnClose.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeWelcome();
+    });
 
-    // (ตัวเลือก) ปิดเมื่อคลิกพื้นหลังนอกกล่อง
+    // ✅ ปุ่ม CTA: ปิด modal + เลื่อน + โฟกัสช่องชื่อ
+    btnCTA && btnCTA.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeWelcome();
+
+      // รอแอนิเมชันปิดเล็กน้อยก่อนโฟกัส
+      setTimeout(() => {
+        const input = document.getElementById('name');   // ช่องชื่อของคุณ
+        if (input) {
+          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          try { input.focus({ preventScroll: true }); } catch (_) { input.focus(); }
+        }
+      }, 120);
+    });
+
+    // ปิดเมื่อคลิกพื้นหลัง
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeWelcome();
     });
 
-    // สำหรับทดสอบ: เปิดผ่านคอนโซลได้ด้วย window.openWelcomeModal()
+    // สำหรับทดสอบ
     window.openWelcomeModal = openWelcome;
   });
 })();
+
