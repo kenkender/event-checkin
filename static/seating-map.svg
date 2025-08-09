@@ -2,11 +2,11 @@
 <style>
 /* Highlight animation for seat in SVG */
 @keyframes seat-blink {
-  0%   { stroke: #fffef7ff; filter: drop-shadow(0 0 16px #ffe957cc); }
+  0%   { stroke: #fffef7ff; filter: drop-shadow(0 0 16px #5776ffff); }
   40%  { stroke: #e32c2c; filter: drop-shadow(0 0 32px #e32c2ccc); }
   60%  { stroke: #57ffe9ff; filter: drop-shadow(0 0 42px #5a57ffff);}
-  80%  { stroke: #ffe957; filter: drop-shadow(0 0 22px #57ffb1cc);}
-  100% { stroke: #577effff; filter: drop-shadow(0 0 16px #eb57ffcc);}
+  80%  { stroke: #ffe957; filter: drop-shadow(0 0 22px #e32c2c);}
+  100% { stroke: #577effff; filter: drop-shadow(0 0 16px #776ffff);}
 }
 
 .seat-highlight {
