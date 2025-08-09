@@ -209,7 +209,12 @@ footer{
 
   /* ——— Typography ——— */
   .main-title{ font-size:1.45rem; }
-  .seating-title{ font-size:1.05rem; }
+  .seating-title{
+    text-align: center !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-size:1.05rem; }
 
   /* ——— Form ——— */
   .input-container{ margin-bottom:12px; }
@@ -221,7 +226,7 @@ footer{
   #seating-map{ width:94vw !important; max-width:94vw !important; min-height:320px !important; }
 
   /* ——— Zoom button ——— */
-  .zoom-btn{ font-size:.95rem; padding:6px 12px; }
+  .zoom-btn{ display: none !important;}
 
   /* ——— Modal on mobile: ให้อยู่ด้านบน + กล่องพอดีจอ ——— */
   .modal-bg{ align-items:flex-start; justify-content:center; padding-top:8vh; }
