@@ -107,7 +107,10 @@ input[type="text"]:focus{ box-shadow:0 4px 10px #ffe957bb; }
 .close-btn:hover{ background:#9e142a; }
 
 /* Footer */
-footer{ width:100vw; background:#18233d; color:#ffe957; font-size:1rem; padding:10px 0; text-align:center; letter-spacing:.03em; opacity:.93; position:fixed; left:0; bottom:0; z-index:9; border-top:1.5px solid #ffe95733; }
+footer{ 
+  width:100%; background:#18233d; color:#ffe957; font-size:1rem; padding:10px 0 7px; 
+  text-align:center; letter-spacing:.03em; opacity:.93; position:fixed; 
+  left:0; bottom:0; z-index:9; border-top:1.5px solid #ffe95733; }
 .footer-text{ display:block; text-align:center; margin:0 auto; }
 
 /* ========================================================================== */
