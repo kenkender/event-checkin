@@ -140,8 +140,8 @@ input[type="text"]:focus { box-shadow: 0 4px 10px #ffe957bb; }
 
 /* ===== Right panel + embedded map ===== */
 .right-panel {
-  min-width: 300px;
-  max-width: 640px;
+  min-width: 900px;
+  max-width: 11 24px;
   width: 44vw;
   padding: 40px 22px 28px;
   align-items: flex-start;
@@ -154,7 +154,7 @@ input[type="text"]:focus { box-shadow: 0 4px 10px #ffe957bb; }
 /* Embedded (หน้าแรก) */
 #seating-map{
   display:block; margin:0 auto; border-radius:18px; box-shadow:0 2px 22px #0002;
-  width:95% !important; max-width:1200px !important; min-height:480px !important;
+  width:100% !important; max-width:1200px !important; min-height:480px !important;
   background:#d6e4fa;
 }
 @media (max-width: 1000px){
@@ -238,7 +238,7 @@ footer{
   #result{ font-size:1.05rem; }
 
   /* แผนผังหน้าแรก */
-  #seating-map{ width:100% !important; max-width:100% !important; min-height:auto !important; }
+  #seating-map{ width:100% !important; max-width:100% !important; min-height:auto !important; margin-right: 8px;}
 
   /* ปุ่มขยาย */
   .zoom-btn{ font-size:.95rem; padding:6px 12px; }
