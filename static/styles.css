@@ -258,111 +258,120 @@ footer{
     }
 }
 
-/* ===== Admin layout polish ===== */
-.admin-header{
+/* ===== Admin page layout (clean & symmetric) ===== */
+.admin-page{
   max-width: 1200px;
-  margin: 42px auto 18px;
+  margin: 48px auto 64px;
   padding: 0 16px;
-}
-.admin-header h1{
-  margin: 0;
-  color: #ffe957;
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: .5px;
-  text-shadow: 0 2px 8px #0d1931;
 }
 
-.admin-wrap{
-  max-width: 1200px;
-  margin: 0 auto 60px;
-  padding: 0 16px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-  align-items: stretch;   /* ยืดให้สูงเท่ากัน */
+.admin-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+}
+.admin-top h1{
+  margin:0;
+  color:#ffe957;
+  font-weight:800;
+  font-size:32px;
+  letter-spacing:.4px;
+  text-shadow:0 2px 8px #0d1931;
+}
+
+.admin-controls{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.admin-controls input{
+  height:42px;
+  min-width:260px;
+  border:none;
+  outline:none;
+  padding:0 12px;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 2px 12px rgba(0,0,0,.12);
+}
+.admin-controls button{
+  height:42px;
+  padding:0 16px;
+  border:none;
+  border-radius:12px;
+  font-weight:800;
+  cursor:pointer;
+  color:#1e3050;
+  background:linear-gradient(90deg,#ffe957 0%,#e32c2c 100%);
+  box-shadow:0 6px 18px rgba(255,233,87,.35);
+}
+.admin-controls button:hover{ transform:translateY(-1px); }
+.admin-controls button:active{ transform:translateY(0); }
+
+.admin-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+  align-items:stretch;
 }
 
 .admin-card{
-  background: rgba(20,34,54,.78);
-  border: 1.5px solid #ffe95733;
-  border-radius: 20px;
-  box-shadow: 0 8px 36px rgba(0,0,0,.25);
-  padding: 18px 18px 20px;
-  display: flex;
-  flex-direction: column;
-  min-height: 320px;      /* ให้ดูบาลานซ์ */
+  background:rgba(20,34,54,.78);
+  border:1.5px solid #ffe95733;
+  border-radius:20px;
+  box-shadow:0 8px 36px rgba(0,0,0,.25);
+  padding:18px 18px 20px;
+  display:flex;
+  flex-direction:column;
+  min-height:360px;          /* ให้สูงพอดี ดูสมมาตร */
 }
 
 .card-head{
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
 }
 .card-head h2{
-  margin: 0;
-  color: #ffe957;
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: .3px;
+  margin:0;
+  color:#ffe957;
+  font-weight:800;
+  font-size:20px;
+  letter-spacing:.3px;
 }
 
-/* Controls (key + button) ชิดขวาและขนาดเสมอกัน */
-.admin-controls{
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.admin-controls input{
-  height: 40px;
-  min-width: 220px;
-  padding: 0 12px;
-  border: none;
-  outline: none;
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0 2px 10px rgba(0,0,0,.1);
-}
-.admin-controls button{
-  height: 40px;
-  padding: 0 16px;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  color: #1e3050;
-  background: linear-gradient(90deg, #ffe957 0%, #e32c2c 100%);
-  box-shadow: 0 4px 18px rgba(255,233,87,.35);
-}
-.admin-controls button:hover{ transform: translateY(-1px); }
-.admin-controls button:active{ transform: translateY(0); }
+.card-body{ flex:1 1 auto; overflow:auto; }
 
-/* ให้เนื้อหาโต๊ะเลื่อนในการ์ดได้ถ้าสูงเกิน */
-.card-body{
-  overflow: auto;
-  flex: 1 1 auto;
+/* Tables */
+.admin-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  background:#eaf1fa;
+  color:#1d2b45;
+  border-radius:14px;
+  overflow:hidden;
+  font-size:.95rem;
 }
-
-/* ตารางในแอดมิน (ถ้าอยากให้หัวติดบน) */
-.admin-card table{
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+.admin-table thead th{
+  position:sticky; top:0; z-index:1;
+  background:#f3f6ff;
+  text-align:left;
+  font-weight:800;
 }
-.admin-card thead th{
-  position: sticky;
-  top: 0;
-  background: #f0f5ff;
-  z-index: 1;
+.admin-table th, .admin-table td{
+  padding:10px 12px;
+  border-bottom:1px solid #d9e2f3;
 }
 
 /* Responsive */
 @media (max-width: 1024px){
-  .admin-header h1{ font-size: 30px; }
+  .admin-page{ max-width: 960px; }
+  .admin-top h1{ font-size:28px; }
 }
 @media (max-width: 900px){
-  .admin-wrap{ grid-template-columns: 1fr; }
-  .admin-controls{ margin-left: 0; }
+  .admin-grid{ grid-template-columns:1fr; }
+  .admin-controls input{ min-width: 200px; }
 }
