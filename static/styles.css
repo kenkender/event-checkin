@@ -28,8 +28,14 @@ html, body{
 }
 .left-panel{ width:340px; min-width:240px; }
 .right-panel{
-  min-width:300px; max-width:640px; width:44vw;
-  padding:40px 22px 28px; align-items:flex-start;
+  /* ให้กว้างขึ้นและยืดได้ตามหน้าจอ */
+  flex: 1 1 auto;
+  min-width: 680px;
+  width: clamp(640px, 62vw, 1200px);
+  max-width: 1200px;
+
+  padding: 40px 22px 28px;
+  align-items: flex-start;
 }
 
 .logo{ width:98px; margin-bottom:8px; filter:drop-shadow(0 0 40px #ffe95799); animation:logoGlow 1.5s infinite alternate; }
