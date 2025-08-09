@@ -130,8 +130,8 @@ footer{
   /* ย่อขนาดการ์ดซ้าย/ขวาให้เล็กลงและไม่กินขอบจอ */
   .left-panel,
   .right-panel{
-    width:92vw;
-    max-width:92vw;
+    width:85vw;
+    max-width:85vw;
     padding:10px 10px 10px;
     border-radius:14px;
     margin:0 auto;           /* จัดให้กลาง */
