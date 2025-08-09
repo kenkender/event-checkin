@@ -1,77 +1,78 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>ระบบเช็คอินเข้าร่วมงาน | Futuristic Event Check-in</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="static/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="static/styles.css" />
 </head>
 <body>
   <div class="main-container futuristic-bg">
-    <!-- ฝั่งซ้าย: Check-in -->
+    <!-- ซ้าย: Check-in -->
     <div class="left-panel glass-card">
-      <img src="static/โลโก้ตำรวจท่องเที่ยว.png" class="logo" alt="Tourist Police Logo">
+      <img src="static/โลโก้ตำรวจท่องเที่ยว.png" class="logo" alt="Tourist Police Logo" />
       <h2 class="main-title">ระบบเช็คอินเข้าร่วมงาน</h2>
       <div class="subtitle">Check-in for Event Participants</div>
+
       <div class="input-container">
-        <input type="text" id="name" placeholder="กรอกชื่อหรือชื่อ-นามสกุล / Please fill name" autofocus>
+        <input type="text" id="name" placeholder="กรอกชื่อหรือชื่อ-นามสกุล / Please fill name" autofocus />
       </div>
+
       <button class="checkin-btn ripple" onclick="checkIn()" id="checkin-btn">
         <span>Check-in</span>
         <div class="loader" id="btn-loader"></div>
       </button>
+
       <div id="result"></div>
     </div>
-    <!-- ฝั่งขวา: แผนผังโต๊ะ + ปุ่มขยาย -->
+
+    <!-- ขวา: แผนผัง + ปุ่มขยาย -->
     <div class="right-panel glass-card">
       <div class="seating-title" style="display:flex; justify-content:space-between; align-items:center;">
         <span>แผนผังที่นั่ง Seating Map</span>
         <button id="openMapModalBtn" class="zoom-btn" title="ขยายแผนผัง">🔍 ขยาย</button>
       </div>
       <div style="width:100%; overflow:auto; text-align:center;">
-        <object id="seating-map" type="image/svg+xml" data="static/seating-map.svg" style="width:92%; height:auto; min-height:580px; max-width:1100px;"></object>
+        <object
+          id="seating-map"
+          type="image/svg+xml"
+          data="static/seating-map.svg"
+          style="width:92%; height:auto; min-height:580px; max-width:1100px;"
+        ></object>
       </div>
     </div>
   </div>
 
-  <!-- Modal สำหรับขยายแผนผัง -->
+  <!-- Modal ขยายแผนผัง -->
   <div id="mapModal" class="modal-bg">
     <div class="modal-content">
       <button id="closeMapModalBtn" class="close-btn" title="ปิด">✕</button>
       <object id="seating-map-modal" type="image/svg+xml" data="static/seating-map.svg"></object>
     </div>
   </div>
-  
+
   <!-- Welcome Modal -->
-<div id="welcomeModal" class="modal-bg welcome-modal" aria-hidden="true">
-  <div class="modal-content welcome-content">
-    <button id="closeWelcomeBtn" class="close-btn" title="ปิด">✕</button>
+  <div id="welcomeModal" class="welcome-modal" aria-hidden="true">
+    <div class="welcome-card" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+      <button type="button" id="welcomeCloseBtn" class="welcome-close" aria-label="Close">✕</button>
 
-    <!-- วงแหวนเรืองแสง AI -->
-    <div class="ai-ring"></div>
+      <img src="static/โลโก้ตำรวจท่องเที่ยว.png" alt="" class="welcome-logo" />
+      <h2 id="welcomeTitle" class="welcome-title">ยินดีต้อนรับสู่<br />กองบัญชาการตำรวจท่องเที่ยว</h2>
+      <div class="welcome-sub">Welcome to Tourist Police Bureau</div>
+      <div class="welcome-day">วันสถาปนากองบัญชาการตำรวจท่องเที่ยว</div>
 
-    <!-- โลโก้ (ถ้าอยากใช้โลโก้องค์กร) -->
-    <img src="static/โลโก้ตำรวจท่องเที่ยว.png" alt="Logo" class="welcome-logo" />
+      <button type="button" id="welcomeCtaBtn" class="welcome-cta">
+        กดเพื่อเข้าร่วมงาน | Press to join the event
+      </button>
 
-    <!-- ข้อความต้อนรับ -->
-    <h3 class="welcome-title">ยินดีต้อนรับสู่<br>กองบัญชาการตำรวจท่องเที่ยว</h3>
-    <div class="welcome-sub">Welcome to Tourist Police Bureau</div>
-    <div class="welcome-event">วันสถาปนากองบัญชาการตำรวจท่องเที่ยว</div>
-
-    <!-- ปุ่มเข้าสู่ระบบเช็คอิน -->
-    <button id="enterEventBtn" class="welcome-cta ripple" type="button">
-      กดเพื่อเข้าร่วมงาน <span style="opacity:.7">|</span> Press to join the event
-    </button>
-
-    <!-- ชิมเมอร์บรรทัดล่าง -->
-    <div class="welcome-hint">กดปุ่มเพื่อเริ่มเช็คอิน / Press the button to start check‑in</div>
+      <div class="welcome-hint">กดปุ่มเพื่อเริ่มเช็คอิน / Press the button to start check-in</div>
+    </div>
   </div>
-</div>
 
   <footer>
-    <span>© 2025 Tourist Police Bureau | Futuristic Check-in System by KENDO</span>
+    <span class="footer-text">© 2025 Tourist Police Bureau | Futuristic Check-in System by KENDO</span>
   </footer>
+
   <script src="static/script.js"></script>
 </body>
 </html>

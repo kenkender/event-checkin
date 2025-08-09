@@ -1,212 +1,198 @@
-// Pulse-animate any elements with .pulse-ani class
-function addPulseEffect(element) {
-  if (element) {
-    element.classList.remove('pulse-ani');
-    void element.offsetWidth;
-    element.classList.add('pulse-ani');
-  }
+/* -------------------------------------------------------
+   Utilities
+------------------------------------------------------- */
+let currentSeatId = null; // เก็บที่นั่งล่าสุดไว้ซิงก์กับ modal
+
+function addPulseEffect(el){
+  if(!el) return;
+  el.classList.remove('pulse-ani');
+  void el.offsetWidth;
+  el.classList.add('pulse-ani');
 }
 
-/* ---------- helpers: เคลียร์/ใส่ไฮไลต์ให้เอกสาร SVG ---------- */
-function clearHighlightsInDoc(svgDoc) {
-  if (!svgDoc) return;
-  svgDoc.querySelectorAll('.seat-highlight').forEach(el => el.classList.remove('seat-highlight'));
-  svgDoc.querySelectorAll('.seat-bg-highlight').forEach(el => el.classList.remove('seat-bg-highlight'));
+/* -------------------------------------------------------
+   SVG Highlight helpers
+------------------------------------------------------- */
+function clearHighlightsInDoc(svgDoc){
+  if(!svgDoc) return;
+  svgDoc.querySelectorAll('.seat-highlight').forEach(el=>el.classList.remove('seat-highlight'));
+  svgDoc.querySelectorAll('.seat-bg-highlight').forEach(el=>el.classList.remove('seat-bg-highlight'));
 }
-
-function applyHighlightInDoc(svgDoc, seatId) {
-  if (!svgDoc || !seatId) return;
+function applyHighlightInDoc(svgDoc, seatId){
+  if(!svgDoc || !seatId) return;
   const seat = svgDoc.getElementById(seatId);
-  if (!seat) return;
+  if(!seat) return;
 
-  // ขอบ
   seat.classList.add('seat-highlight');
 
-  // พื้นหลัง (รองรับทั้ง <g> และ <rect>/<circle>)
-  if (seat.tagName === 'g') {
+  if(seat.tagName === 'g'){
     const bg = seat.querySelector('rect, circle');
-    if (bg) {
+    if(bg){
       bg.classList.remove('seat-bg-highlight');
-      void bg.offsetWidth;               // force repaint
+      void bg.offsetWidth;
       bg.classList.add('seat-bg-highlight');
     }
-  } else if (seat.tagName === 'rect' || seat.tagName === 'circle') {
+  }else if(seat.tagName === 'rect' || seat.tagName === 'circle'){
     seat.classList.remove('seat-bg-highlight');
-    void seat.offsetWidth;               // force repaint
+    void seat.offsetWidth;
     seat.classList.add('seat-bg-highlight');
   }
 }
 
-/* ---------- ให้มีไฮไลต์ได้ทีละที่เดียว ทั้งแผนผังหลักและ modal ---------- */
-function highlightSeat(seatId) {
-    currentSeatId = seatId || null;
+/* ให้มีไฮไลต์ได้ทีละที่เดียว */
+function highlightSeat(seatId){
+  currentSeatId = seatId || null;
+
   const objMain  = document.getElementById('seating-map');
-  const objModal = document.getElementById('seating-map-modal'); // อาจไม่มีถ้า modal ยังไม่เปิด
+  const objModal = document.getElementById('seating-map-modal');
 
-  // เคลียร์ของเดิมในทุกเอกสารที่มี
-  if (objMain && objMain.contentDocument)  clearHighlightsInDoc(objMain.contentDocument);
-  if (objModal && objModal.contentDocument) clearHighlightsInDoc(objModal.contentDocument);
+  if(objMain && objMain.contentDocument)  clearHighlightsInDoc(objMain.contentDocument);
+  if(objModal && objModal.contentDocument) clearHighlightsInDoc(objModal.contentDocument);
 
-  // ใส่ของใหม่ในแผนผังหลัก
-  if (objMain && objMain.contentDocument && seatId) {
+  if(objMain && objMain.contentDocument && seatId){
     applyHighlightInDoc(objMain.contentDocument, seatId);
   }
 }
 
-/* ---------- sync ไปยัง modal เมื่อเปิด ---------- */
-function syncHighlightToModal() {
+/* ซิงก์ไป modal เมื่อเปิด */
+function syncHighlightToModal(){
   const objModal = document.getElementById('seating-map-modal');
-  if (!objModal) return;
-
-  // ไม่มี seat ล่าสุด ไม่ต้องทำอะไร
-  if (!currentSeatId) return;
+  if(!objModal || !currentSeatId) return;
 
   const applyNow = () => {
-    if (!objModal.contentDocument) return;
+    if(!objModal.contentDocument) return;
     clearHighlightsInDoc(objModal.contentDocument);
     applyHighlightInDoc(objModal.contentDocument, currentSeatId);
   };
 
-  // ถ้า modal ยังโหลดไม่เสร็จ รอ 'load' ก่อน
-  if (!objModal.contentDocument) {
-    objModal.addEventListener('load', () => applyNow(), { once: true });
-  } else {
+  if(!objModal.contentDocument){
+    objModal.addEventListener('load', applyNow, { once:true });
+  }else{
     applyNow();
   }
 }
 
-/* ---------- เช็คอิน ---------- */
-async function checkIn() {
-  const name = document.getElementById("name").value.trim();
-  if (!name) { showResult("กรุณากรอกชื่อก่อน", false); return; }
+/* -------------------------------------------------------
+   Check-in
+------------------------------------------------------- */
+async function checkIn(){
+  const name = document.getElementById('name').value.trim();
+  if(!name){ showResult('กรุณากรอกชื่อก่อน', false); return; }
 
   setBtnLoading(true);
   const formData = new FormData();
-  formData.append("name", name);
+  formData.append('name', name);
 
-  try {
-    const res = await fetch("/checkin", { method: "POST", body: formData });
+  try{
+    const res  = await fetch('/checkin', { method:'POST', body:formData });
     const data = await res.json();
-    if (data.success) {
+
+    if(data.success){
       showResult(
         `✅ เช็คอินสำเร็จ! ที่นั่งของคุณคือ <span style="color:#e32c2c">${data.seat}</span><br>
          <span style="color:#ffe957;font-size:0.97em;">Check-in successful! Your seat is<br><span style="color:#e32c2c">${data.seat_en || data.seat}</span></span>`,
         true
       );
-      // สำคัญ: ทุกครั้งที่เช็คอินใหม่ เคลียร์ก่อน แล้วใส่ไฮไลต์ใหม่ (ทำใน highlightSeat)
       highlightSeat(data.seat);
-    } else {
+    }else{
       showResult(data.error, false);
-      highlightSeat(null); // เคลียร์
+      highlightSeat(null);
     }
-  } catch (e) {
-    showResult("เกิดข้อผิดพลาดกับเซิร์ฟเวอร์ / Server error", false);
+  }catch(e){
+    showResult('เกิดข้อผิดพลาดกับเซิร์ฟเวอร์ / Server error', false);
     highlightSeat(null);
-  } finally {
+  }finally{
     setBtnLoading(false);
   }
 }
 
-/* ---------- แสดงผลข้อความ ---------- */
-function showResult(msg, success) {
-  const resultDiv = document.getElementById("result");
+function showResult(msg, success){
+  const resultDiv = document.getElementById('result');
   resultDiv.innerHTML = `<span style="color:${success ? '#ffe957' : '#ff7878'}">${msg}</span>`;
-  resultDiv.style.color = success ? "#ffe957" : "#ff7878";
-  resultDiv.style.textShadow = success ? "0 2px 16px #ffe95733" : "0 2px 16px #ff7878bb";
+  resultDiv.style.color = success ? '#ffe957' : '#ff7878';
+  resultDiv.style.textShadow = success ? '0 2px 16px #ffe95733' : '0 2px 16px #ff7878bb';
   addPulseEffect(resultDiv);
 }
 
-/* ---------- กด Enter เพื่อเช็คอิน ---------- */
-document.addEventListener('DOMContentLoaded', function () {
-  const btn = document.getElementById('checkin-btn');
-  const input = document.getElementById("name");
-  if (btn) btn.addEventListener('click', () => addPulseEffect(btn));
-  if (input) input.addEventListener("keydown", e => { if (e.key === "Enter") checkIn(); });
+/* Enter -> checkin */
+document.addEventListener('DOMContentLoaded', () => {
+  const btn   = document.getElementById('checkin-btn');
+  const input = document.getElementById('name');
+  if(btn)   btn.addEventListener('click', () => addPulseEffect(btn));
+  if(input) input.addEventListener('keydown', e => { if(e.key === 'Enter') checkIn(); });
 });
 
-/* ---------- ปุ่มโหลด ---------- */
-function setBtnLoading(loading) {
-  const btn = document.getElementById('checkin-btn');
+/* Loading spinner */
+function setBtnLoading(loading){
+  const btn    = document.getElementById('checkin-btn');
   const loader = document.getElementById('btn-loader');
-  if (!btn || !loader) return;
-  if (loading) {
-    loader.style.display = "inline-block";
-    btn.querySelector("span").style.opacity = "0.2";
+  if(!btn || !loader) return;
+
+  if(loading){
+    loader.style.display = 'inline-block';
+    btn.querySelector('span').style.opacity = '0.2';
     btn.disabled = true;
-  } else {
-    loader.style.display = "none";
-    btn.querySelector("span").style.opacity = "1";
+  }else{
+    loader.style.display = 'none';
+    btn.querySelector('span').style.opacity = '1';
     btn.disabled = false;
   }
 }
 
-/* ---------- Modal Zoom Map + sync ---------- */
-document.addEventListener('DOMContentLoaded', function () {
-  const modal   = document.getElementById('mapModal');
-  const openBtn = document.getElementById('openMapModalBtn');
-  const closeBtn= document.getElementById('closeMapModalBtn');
+/* -------------------------------------------------------
+   Modal Zoom Map
+------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+  const modal    = document.getElementById('mapModal');
+  const openBtn  = document.getElementById('openMapModalBtn');
+  const closeBtn = document.getElementById('closeMapModalBtn');
 
-  if (openBtn && modal) openBtn.onclick = () => {
-    modal.classList.add('open');
-    syncHighlightToModal();
-  };
-  if (closeBtn && modal) closeBtn.onclick = () => modal.classList.remove('open');
-  if (modal) modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('open'); };
+  if(openBtn && modal){
+    openBtn.onclick = () => { modal.classList.add('open'); syncHighlightToModal(); };
+  }
+  if(closeBtn && modal){
+    closeBtn.onclick = () => modal.classList.remove('open');
+  }
+  if(modal){
+    modal.onclick = (e) => { if(e.target === modal) modal.classList.remove('open'); };
+  }
 });
 
-// ==== Welcome Modal (show once per browser) ====
-(function () {
-  function openWelcome() {
-    const m = document.getElementById('welcomeModal');
-    if (m) m.classList.add('open');
-  }
-  function closeWelcome() {
-    const m = document.getElementById('welcomeModal');
-    if (m) m.classList.remove('open');
-  }
+/* -------------------------------------------------------
+   Welcome Modal (แสดงทุกครั้งที่โหลดหน้า)
+------------------------------------------------------- */
+function openWelcomeModal(){
+  const modal = document.getElementById('welcomeModal');
+  if(!modal) return;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+}
+function closeWelcomeModal(){
+  const modal = document.getElementById('welcomeModal');
+  if(!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+  document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+  const nameInput = document.getElementById('name');
+  if(nameInput) nameInput.focus();
+}
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const modal   = document.getElementById('welcomeModal');
-    const btnClose= document.getElementById('welcomeClose');
-    const btnCTA  = document.getElementById('welcomeCTA');
+document.addEventListener('DOMContentLoaded', () => {
+  const modal  = document.getElementById('welcomeModal');
+  const btnCta = document.getElementById('welcomeCtaBtn');
+  const btnX   = document.getElementById('welcomeCloseBtn');
+  if(!modal || !btnCta || !btnX) return;
 
-    if (!modal) return;
-
-    // โชว์ครั้งแรกของเบราว์เซอร์
-    const KEY = 'welcome_shown_v1';
-    if (!localStorage.getItem(KEY)) {
-      openWelcome();
-      localStorage.setItem(KEY, '1');
-    }
-
-    btnClose && btnClose.addEventListener('click', (e) => {
-      e.preventDefault();
-      closeWelcome();
-    });
-
-    // ✅ ปุ่ม CTA: ปิด modal + เลื่อน + โฟกัสช่องชื่อ
-    btnCTA && btnCTA.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      closeWelcome();
-
-      // รอแอนิเมชันปิดเล็กน้อยก่อนโฟกัส
-      setTimeout(() => {
-        const input = document.getElementById('name');   // ช่องชื่อของคุณ
-        if (input) {
-          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          try { input.focus({ preventScroll: true }); } catch (_) { input.focus(); }
-        }
-      }, 120);
-    });
-
-    // ปิดเมื่อคลิกพื้นหลัง
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeWelcome();
-    });
-
-    // สำหรับทดสอบ
-    window.openWelcomeModal = openWelcome;
+  btnCta.addEventListener('click', closeWelcomeModal);
+  btnX.addEventListener('click', closeWelcomeModal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeWelcomeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if(modal.classList.contains('open') && e.key === 'Escape') closeWelcomeModal();
   });
-})();
 
+  // แสดงทุกครั้งที่รีเฟรช
+  openWelcomeModal();
+});

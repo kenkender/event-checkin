@@ -1,82 +1,43 @@
-/* ==========================================================================
-   Fonts
-   ========================================================================== */
+/* ========================================================================== */
+/* Fonts                                                                       */
+/* ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
 
-/* ==========================================================================
-   Base (Desktop-first = ค่ามาตรฐานใช้กับจอคอม/แท็บเล็ตแนวนอน)
-   ========================================================================== */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Sarabun', 'Prompt', Arial, sans-serif;
-  letter-spacing: .03em;
-  background: linear-gradient(135deg, #0f1c36 0%, #234067 100%);
-  min-height: 100vh;
+/* ========================================================================== */
+/* Base (Desktop-first)                                                        */
+/* ========================================================================== */
+html, body{
+  height:100%; margin:0; padding:0;
+  font-family:'Sarabun','Prompt',Arial,sans-serif;
+  letter-spacing:.03em;
+  background:linear-gradient(135deg,#0f1c36 0%,#234067 100%);
+  min-height:100vh;
 }
-
-/* ฉากหลัง */
-.futuristic-bg {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #17223b 0%, #243e65 100%);
+.futuristic-bg{
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#17223b 0%,#243e65 100%);
 }
-
-/* โครงหน้า */
-.main-container {
-  display: flex;
-  flex-direction: row;
-  gap: 44px;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  padding: 32px 0 0;
+.main-container{
+  display:flex; flex-direction:row; gap:44px; justify-content:center; align-items:flex-start;
+  width:100%; padding:32px 0 0;
 }
-
-/* การ์ดกระจก */
-.glass-card {
-  background: rgba(20,34,54,.78);
-  backdrop-filter: blur(8px) brightness(1.1);
-  border-radius: 26px;
-  border: 1.5px solid #ffe95755;
-  box-shadow: 0 8px 48px #37445c88;
-  padding: 40px 36px 36px;
-  margin-bottom: 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.glass-card{
+  background:rgba(20,34,54,.78); backdrop-filter:blur(8px) brightness(1.1);
+  border-radius:26px; border:1.5px solid #ffe95755; box-shadow:0 8px 48px #37445c88;
+  padding:40px 36px 36px; margin-bottom:32px; display:flex; flex-direction:column; align-items:center;
 }
-
-/* ซ้าย/ขวา */
-.left-panel { width: 340px; min-width: 240px; }
+.left-panel{ width:340px; min-width:240px; }
 .right-panel{
-  min-width: 300px;
-  max-width: 640px;
-  width: 44vw;
-  padding: 40px 22px 28px;
-  align-items: flex-start;
+  min-width:300px; max-width:640px; width:44vw;
+  padding:40px 22px 28px; align-items:flex-start;
 }
 
-/* โลโก้ */
-.logo{
-  width: 98px;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 0 40px #ffe95799);
-  animation: logoGlow 2.5s infinite alternate;
-}
-@keyframes logoGlow{
-  0%   { filter: drop-shadow(0 0 12px #ffe95788); }
-  100% { filter: drop-shadow(0 0 44px #ffe957); }
-}
+.logo{ width:98px; margin-bottom:8px; filter:drop-shadow(0 0 40px #ffe95799); animation:logoGlow 2.5s infinite alternate; }
+@keyframes logoGlow{ 0%{filter:drop-shadow(0 0 12px #ffe95788);} 100%{filter:drop-shadow(0 0 44px #ffe957);} }
 
-/* หัวเรื่อง */
 h2{ margin:12px 0 6px; font-size:2.2rem; font-weight:700; color:#ffe957; text-shadow:0 2px 8px #0d1931; text-align:center; }
 .main-title{
-  font-size:1.7rem; /* เดิม 2.2rem */
-  font-weight:700; color:#ffe957; text-shadow:0 2px 8px #0d1931;
+  font-size:1.7rem; font-weight:700; color:#ffe957; text-shadow:0 2px 8px #0d1931;
   letter-spacing:.5px; white-space:nowrap; width:100%; display:block; margin:12px 0 6px;
 }
 .seating-title{
@@ -84,265 +45,136 @@ h2{ margin:12px 0 6px; font-size:2.2rem; font-weight:700; color:#ffe957; text-sh
   letter-spacing:1px; text-shadow:0 1.5px 6px #31425caa; width:100%; text-align:center;
 }
 
-/* คำอธิบาย */
 .subtitle{ font-size:1.1rem; color:#e32c2c; text-align:center; font-weight:500; letter-spacing:.6px; margin:0 0 18px; }
 
-/* ฟอร์ม */
 .input-container{ width:100%; margin-bottom:12px; }
 input[type="text"]{
   width:100%; padding:14px 10px; border-radius:13px; border:none; font-size:1.07rem;
   box-shadow:0 2px 12px #0002; background:#f7f8fa; outline:none; margin:0 0 8px -10px;
-  transition: box-shadow .25s; letter-spacing:.03em;
+  transition:box-shadow .25s; letter-spacing:.03em;
 }
 input[type="text"]:focus{ box-shadow:0 4px 10px #ffe957bb; }
 
-/* ปุ่มเช็คอิน */
 .checkin-btn{
   width:100%; padding:15px 0; border:none; border-radius:13px; cursor:pointer;
-  background:linear-gradient(90deg, #e32c2c 30%, #ffe957 100%);
-  color:#131313; font-size:1.13rem; font-weight:700;
+  background:linear-gradient(90deg,#e32c2c 30%,#ffe957 100%); color:#131313; font-size:1.13rem; font-weight:700;
   box-shadow:0 2px 18px #e32c2c33; transition:background .18s, transform .08s, box-shadow .18s;
   position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; gap:8px;
 }
-.checkin-btn:active, .checkin-btn:focus{
-  background:linear-gradient(90deg, #c91414 35%, #ffe957 90%);
-  transform:scale(1.03);
-  box-shadow:0 4px 28px #e32c2c55;
-}
-/* ripple */
-.ripple::after{
-  content:""; position:absolute; width:100px; height:100px; left:50%; top:50%;
-  border-radius:50%; pointer-events:none; background:rgba(255,233,87,.22);
-  transform:translate(-50%,-50%) scale(.2); opacity:0; transition:transform .38s, opacity .44s;
-}
+.checkin-btn:active,.checkin-btn:focus{ background:linear-gradient(90deg,#c91414 35%,#ffe957 90%); transform:scale(1.03); box-shadow:0 4px 28px #e32c2c55; }
+.ripple::after{ content:""; position:absolute; width:100px; height:100px; left:50%; top:50%; border-radius:50%; pointer-events:none; background:rgba(255,233,87,.22); transform:translate(-50%,-50%) scale(.2); opacity:0; transition:transform .38s, opacity .44s; }
 .ripple:active:after{ transform:translate(-50%,-50%) scale(2.2); opacity:1; transition:0s; }
 
-/* ป้ายผลลัพธ์ */
-#result{ margin-top:18px; font-size:1.17rem; font-weight:700; text-align:center; min-height:38px; transition: color .28s, text-shadow .28s; }
+#result{ margin-top:18px; font-size:1.17rem; font-weight:700; text-align:center; min-height:38px; transition:color .28s, text-shadow .28s; }
 
-/* ==========================================================================
-   Seating map (ฝังในหน้าแรก – ค่ามาตรฐานสำหรับเดสก์ท็อป)
-   ========================================================================== */
+/* Seating map (embed) */
 #seating-map{
   display:block; margin:0 auto; border-radius:18px; box-shadow:0 2px 22px #0002;
-  width:92% !important; max-width:1100px !important; min-height:480px !important;
-  background:#d6e4fa;
+  width:92% !important; max-width:1100px !important; min-height:480px !important; background:#d6e4fa;
 }
-/* ย่อสำหรับจอ <= 1000px (แท็บเล็ตแนวตั้ง) */
-@media (max-width: 1000px){
+@media (max-width:1000px){
   #seating-map{ width:94vw !important; max-width:94vw !important; min-height:330px !important; }
 }
 
-/* ==========================================================================
-   SVG highlight
-   ========================================================================== */
+/* Highlight ใน SVG */
 @keyframes seat-blink{
-  0%{   stroke:#b2c0ff; filter:drop-shadow(0 0 16px #ffe957cc); }
-  40%{  stroke:#ff5b5b; filter:drop-shadow(0 0 32px #e32c2ccc); }
-  60%{  stroke:#5792ff; filter:drop-shadow(0 0 42px #ffe957ff); }
-  80%{  stroke:#ff3939; filter:drop-shadow(0 0 22px #ffe957cc); }
-  100%{ stroke:#144bfd; filter:drop-shadow(0 0 16px #ffe957cc); }
+  0%{stroke:#b2c0ff; filter:drop-shadow(0 0 16px #ffe957cc);}
+  40%{stroke:#ff5b5b; filter:drop-shadow(0 0 32px #e32c2ccc);}
+  60%{stroke:#5792ff; filter:drop-shadow(0 0 42px #ffe957ff);}
+  80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #ffe957cc);}
+  100%{stroke:#144bfd; filter:drop-shadow(0 0 16px #ffe957cc);}
 }
-.seat-highlight{
-  stroke:#fd5959 !important; stroke-width:7px !important;
-  filter:drop-shadow(0 0 22px #577effcc);
-  animation: seat-blink .7s cubic-bezier(.7,.1,1,1.1) 0s infinite alternate;
-}
+.seat-highlight{ stroke:#fd5959 !important; stroke-width:7px !important; filter:drop-shadow(0 0 22px #577effcc); animation:seat-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate; }
 
-/* ==========================================================================
-   Zoom / Modal (เดสก์ท็อปเป็นค่า default)
-   ========================================================================== */
+/* Modal Zoom */
 .zoom-btn{
-  background:linear-gradient(90deg, #ffe957 0%, #e32c2c 100%); color:#1e3050;
-  border:none; border-radius:8px; padding:5px 16px; margin-left:16px;
-  font-size:1.02rem; font-weight:700; cursor:pointer;
+  background:linear-gradient(90deg,#ffe957 0%,#e32c2c 100%); color:#1e3050;
+  border:none; border-radius:8px; padding:5px 16px; margin-left:16px; font-size:1.02rem; font-weight:700; cursor:pointer;
   box-shadow:0 1px 10px #ffe95777; transition:background .18s, transform .08s, box-shadow .18s;
 }
-.zoom-btn:hover, .zoom-btn:focus{ background:linear-gradient(90deg, #ffe957 50%, #e32c2c 100%); transform:scale(1.06); color:#fff; }
+.zoom-btn:hover,.zoom-btn:focus{ background:linear-gradient(90deg,#ffe957 50%,#e32c2c 100%); transform:scale(1.06); color:#fff; }
 
-/* พื้นหลังโมดัล */
-.modal-bg{
-  display:none; position:fixed; z-index:11111; inset:0; width:100vw; height:100vh;
-  background:rgba(10,19,40,.88); align-items:center; justify-content:center;
-}
+.modal-bg{ display:none; position:fixed; z-index:11111; inset:0; width:100vw; height:100vh; background:rgba(10,19,40,.88); align-items:center; justify-content:center; }
 .modal-bg.open{ display:flex; }
-
-/* กล่องโมดัล (คอม) – ให้กล่องเป็นตัวคุมขนาด */
 .modal-content{
   position:relative; background:#eaf1fa; border-radius:18px; box-shadow:0 10px 44px #233a6036;
-  width:85vw; max-width:980px; max-height:90vh; overflow:auto;
-  min-width:300px; display:flex; flex-direction:column; align-items:center;
-  padding:18px 16px 14px; animation: fadeInUp .28s;
+  width:85vw; max-width:980px; max-height:90vh; overflow:auto; min-width:300px;
+  display:flex; flex-direction:column; align-items:center; padding:18px 16px 14px; animation:fadeInUp .28s;
 }
-/* map ในโมดัลให้เต็มกล่อง */
 #seating-map-modal{ width:100% !important; max-width:100% !important; height:auto !important; display:block; margin:0 auto; }
-
 @keyframes fadeInUp{ from{opacity:0; transform:translateY(48px);} to{opacity:1; transform:none;} }
-
-.close-btn{
-  position:absolute; right:22px; top:18px; background:#e32c2c; color:#fff; font-size:1.3rem;
-  border:none; border-radius:50%; width:36px; height:36px; cursor:pointer;
-  box-shadow:0 2px 16px #e32c2c88; display:flex; align-items:center; justify-content:center;
-}
+.close-btn{ position:absolute; right:22px; top:18px; background:#e32c2c; color:#fff; font-size:1.3rem; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; box-shadow:0 2px 16px #e32c2c88; display:flex; align-items:center; justify-content:center; }
 .close-btn:hover{ background:#9e142a; }
 
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-footer{
-  width:100vw; background:#18233d; color:#ffe957; font-size:1rem; padding:10px 0 7px;
-  text-align:center; letter-spacing:.03em; opacity:.93; position:fixed; left:0; bottom:0; z-index:9;
-  border-top:1.5px solid #ffe95733;
-}
+/* Footer */
+footer{ width:100vw; background:#18233d; color:#ffe957; font-size:1rem; padding:10px 0 7px; text-align:center; letter-spacing:.03em; opacity:.93; position:fixed; left:0; bottom:0; z-index:9; border-top:1.5px solid #ffe95733; }
+.footer-text{ display:block; text-align:center; margin:0 auto; }
 
-/* ==========================================================================
-   MOBILE / SMALL SCREENS (เฉพาะมือถือเป็นหลัก)
-   ========================================================================== */
-@media (max-width: 768px){
-
-  /* ——— Global scale ——— */
+/* ========================================================================== */
+/* Mobile                                                                     */
+/* ========================================================================== */
+@media (max-width:768px){
   html{ font-size:15.5px; }
 
-  /* ——— Layout ——— */
   .main-container{ flex-direction:column; gap:14px; padding:14px 10px 36px; }
-  .left-panel, .right-panel{ width:100%; max-width:100%; padding:16px 14px 14px; border-radius:18px; }
+  .left-panel,.right-panel{ width:100%; max-width:100%; padding:16px 14px 14px; border-radius:18px; }
 
-  /* ——— Typography ——— */
   .main-title{ font-size:1.45rem; }
-  /* จัด container ของหัวข้อให้กลาง (ตัวเดียวกับที่ครอบปุ่ม) */
-  .seating-title {
-    display: flex !important;
-    justify-content: center !important; /* override inline justify-content:space-between */
-    align-items: center !important;
-    width: 100%;
-    text-align: center !important;
-    gap: 8px;
-  }
-  /* เผื่อกรณีมี <span> ข้างใน ให้ดันให้อยู่กลางจริง ๆ */
-  .seating-title > span {
-    margin: 0 auto !important;
-  }
 
-  /* ——— Form ——— */
+  /* จัดหัวข้อให้กลางจริง ๆ */
+  .seating-title{
+    display:flex !important; justify-content:center !important; align-items:center !important;
+    width:100%; text-align:center !important; gap:8px;
+  }
+  .seating-title > span{ margin:0 auto !important; }
+
   .input-container{ margin-bottom:12px; }
   input[type="text"]{ font-size:1rem; padding:10px 10px; border-radius:10px; }
   .checkin-btn{ font-size:1.05rem; padding:12px 0; border-radius:12px; }
   #result{ font-size:1.05rem; }
 
-  /* ——— Map on main page (ให้พอดีจอมือถือ) ——— */
   #seating-map{ width:94vw !important; max-width:94vw !important; min-height:320px !important; }
+  .zoom-btn{ display:none !important; }
 
-  /* ——— Zoom button ——— */
-  .zoom-btn{ display: none !important;}
-
-  /* ——— Modal on mobile: ให้อยู่ด้านบน + กล่องพอดีจอ ——— */
   .modal-bg{ align-items:flex-start; justify-content:center; padding-top:8vh; }
   .modal-content{ width:94vw; max-width:94vw; max-height:70vh; }
   #seating-map-modal{ width:100% !important; height:auto !important; display:block; margin:0 auto; }
 }
-
-/* จอเล็กมาก */
-@media (max-width: 480px){
+@media (max-width:480px){
   html{ font-size:14.8px; }
   .main-title{ font-size:1.35rem; }
   .checkin-btn{ font-size:1rem; padding:11px 0; }
   #result{ font-size:1rem; }
   .modal-content{ max-height:60vh; }
 }
-footer {
-  text-align: center;
-  width: 100%;
-}
 
-.footer-text {
-  display: block;
-  text-align: center;
-  margin: 0 auto;
+/* ========================================================================== */
+/* Welcome Modal                                                               */
+/* ========================================================================== */
+.welcome-modal{
+  position:fixed; inset:0; background:rgba(10,19,40,.75);
+  display:none; align-items:center; justify-content:center; z-index:99999;
 }
+.welcome-modal.open{ display:flex; }
 
-/* ====== Welcome Modal (AI 2025) ====== */
-.welcome-modal.modal-bg { /* ใช้พื้นหลังเดิมแต่เติม effect */
-  background: radial-gradient(1200px 800px at 50% 10%, rgba(40,70,120,.35), transparent 60%),
-              linear-gradient(180deg, rgba(10,19,40,.92) 0%, rgba(10,19,40,.88) 100%);
+.welcome-card{
+  position:relative; width:min(780px,92vw); background:#eaf1fa; border-radius:20px;
+  padding:28px 24px 22px; box-shadow:0 20px 80px rgba(0,0,0,.25); overflow:hidden;
 }
-
-.welcome-content {
-  width: min(92vw, 720px);
-  max-height: 90vh;
-  overflow: auto;
-  background: linear-gradient(180deg, #eaf1fa 0%, #eef4ff 100%);
-  border: 1.5px solid #ffe95766;
-  position: relative;
-  isolation: isolate;            /* ให้ pseudo ซ้อนชั้นสวย */
-  animation: popIn .38s cubic-bezier(.2,.85,.25,1) both;
+.welcome-close{
+  position:absolute; right:18px; top:16px; width:38px; height:38px; border-radius:50%;
+  border:none; cursor:pointer; background:#e32c2c; color:#fff; box-shadow:0 4px 16px rgba(227,44,44,.5); font-size:18px;
 }
-
-/* วงแหวนเรืองแสง AI */
-.ai-ring{
-  position:absolute; inset: -120px -80px auto auto;
-  width: 280px; height: 280px; border-radius: 50%;
-  background:
-    conic-gradient(from 0deg, #ffe957, #e32c2c, #5792ff, #ffe957);
-  filter: blur(36px) saturate(150%);
-  opacity: .35;
-  animation: ringSpin 8s linear infinite;
-  z-index: -1;
-}
-
-/* โลโก้ */
-.welcome-logo{
-  width: 92px; margin: 6px auto 10px; display:block;
-  filter: drop-shadow(0 0 26px #ffe95788);
-  animation: logoFloat 3.8s ease-in-out infinite;
-}
-
-/* ข้อความ */
-.welcome-title{
-  margin: 4px 0 4px;
-  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
-  text-align:center;
-  color:#12223e;
-  letter-spacing:.6px;
-}
-.welcome-sub{
-  text-align:center; font-size: clamp(1rem, 2vw, 1.2rem);
-  color:#2a3e65; opacity:.95; margin-bottom: 6px;
-  background: linear-gradient(90deg, #e32c2c, #ffe957, #5792ff);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 3.2s linear infinite;
-}
-.welcome-event{
-  text-align:center; font-size: clamp(1rem, 2.1vw, 1.24rem);
-  color:#e32c2c; font-weight: 700; letter-spacing:.4px; margin-bottom: 14px;
-}
-
-/* ปุ่ม CTA */
+.welcome-close:active{ transform:scale(.96); }
+.welcome-logo{ width:86px; display:block; margin:4px auto 10px; filter:drop-shadow(0 0 18px #ffe95788); }
+.welcome-title{ text-align:center; color:#203252; font-size:clamp(22px,2.6vw,34px); line-height:1.35; margin:6px 0 6px; font-weight:800; }
+.welcome-sub{ text-align:center; color:#1b6fe0; font-size:clamp(14px,1.5vw,18px); margin:0 0 4px; }
+.welcome-day{ text-align:center; color:#e32c2c; font-weight:700; margin:0 0 16px; }
 .welcome-cta{
-  width: min(90%, 520px);
-  margin: 10px auto 8px; display:flex; align-items:center; justify-content:center; gap:10px;
-  padding: 14px 16px; border-radius: 14px; border: none; cursor: pointer;
-  font-size: 1.05rem; font-weight: 800; letter-spacing:.3px;
-  color:#141414;
-  background: linear-gradient(90deg, #ffe957 0%, #ffc83d 50%, #ffe957 100%);
-  box-shadow: 0 6px 28px #ffe95755, inset 0 0 0 2px #14141418;
-  transition: transform .08s ease, box-shadow .2s ease;
+  display:block; width:min(520px,86%); margin:0 auto 12px; padding:14px 18px;
+  border:none; border-radius:12px; cursor:pointer; font-weight:700; font-size:clamp(14px,1.8vw,18px);
+  color:#1b1b1b; background:linear-gradient(90deg,#ffe957 0%,#ffd84a 100%); box-shadow:0 8px 26px rgba(255,233,87,.35);
 }
-.welcome-cta:hover{ transform: translateY(-1px) scale(1.02); box-shadow: 0 10px 36px #ffe95766, inset 0 0 0 2px #14141422; }
-.welcome-cta:active{ transform: scale(.98); }
-
-.welcome-hint{
-  text-align:center; font-size: .95rem; color:#2b3a58; opacity:.85; margin-top: 4px;
-}
-
-/* Animations */
-@keyframes popIn { from{opacity:0; transform: translateY(22px) scale(.98);} to{opacity:1; transform:none;} }
-@keyframes shimmer { from{ background-position: 0% 50%; } to{ background-position: 200% 50%; } }
-@keyframes ringSpin { to { transform: rotate(360deg); } }
-@keyframes logoFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-6px);} }
-
-/* มือถือ: โมดัลเริ่มชิดบน + ใช้งานง่าย */
-@media (max-width: 768px){
-  .welcome-modal.modal-bg{ align-items:flex-start; padding-top: 8vh; }
-  .welcome-content{ width: 94vw; }
-}
+.welcome-cta:hover{ transform:translateY(-1px); }
+.welcome-cta:active{ transform:translateY(0); }
+.welcome-hint{ text-align:center; color:#5e6a80; font-size:13px; }
