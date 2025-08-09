@@ -156,8 +156,8 @@ footer{
 
   /* ฟอร์มและปุ่มให้กะทัดรัด */
   .input-container{ margin-bottom:10px; }
-  input[type="text"]{ font-size:0.98rem; padding:9px 10px; width: 80%; border-radius:10px; }
-  .checkin-btn{ font-size:1.0rem; padding:10px 0; border-radius:12px; }
+  input[type="text"]{ font-size:0.98rem; padding:9px 10px; width: 90%; border-radius:10px; margin-left: auto; margin-right: auto; }
+  .checkin-btn{ font-size:1.0rem; padding:10px 0; width: 90%; margin-left: auto; margin-right: auto; border-radius:12px; }
   #result{ font-size:1.0rem; }
 
   /* แผนผังหน้าแรก (ในการ์ดขวา) ให้พอดีจอมากขึ้น */
