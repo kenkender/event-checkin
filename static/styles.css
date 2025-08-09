@@ -137,15 +137,15 @@ input[type="text"]:focus{ box-shadow:0 4px 10px #ffe957bb; }
    SVG highlight
    ========================================================================== */
 @keyframes seat-blink{
-  0%{   stroke:#ffffff; filter:drop-shadow(0 0 16px #ffe957cc); }
-  40%{  stroke:#e32c2c; filter:drop-shadow(0 0 32px #e32c2ccc); }
+  0%{   stroke:#b2c0ff; filter:drop-shadow(0 0 16px #ffe957cc); }
+  40%{  stroke:#ff5b5b; filter:drop-shadow(0 0 32px #e32c2ccc); }
   60%{  stroke:#5792ff; filter:drop-shadow(0 0 42px #ffe957ff); }
-  80%{  stroke:#ffe957; filter:drop-shadow(0 0 22px #ffe957cc); }
-  100%{ stroke:#95ff57; filter:drop-shadow(0 0 16px #ffe957cc); }
+  80%{  stroke:#ff3939; filter:drop-shadow(0 0 22px #ffe957cc); }
+  100%{ stroke:#144bfd; filter:drop-shadow(0 0 16px #ffe957cc); }
 }
 .seat-highlight{
-  stroke:#ffe957 !important; stroke-width:7px !important;
-  filter:drop-shadow(0 0 22px #57ff57cc);
+  stroke:#fd5959 !important; stroke-width:7px !important;
+  filter:drop-shadow(0 0 22px #577effcc);
   animation: seat-blink .7s cubic-bezier(.7,.1,1,1.1) 0s infinite alternate;
 }
 
