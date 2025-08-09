@@ -209,12 +209,19 @@ footer{
 
   /* ——— Typography ——— */
   .main-title{ font-size:1.45rem; }
-  .seating-title{
+  /* จัด container ของหัวข้อให้กลาง (ตัวเดียวกับที่ครอบปุ่ม) */
+  .seating-title {
+    display: flex !important;
+    justify-content: center !important; /* override inline justify-content:space-between */
+    align-items: center !important;
+    width: 100%;
     text-align: center !important;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    font-size:1.05rem; }
+    gap: 8px;
+  }
+  /* เผื่อกรณีมี <span> ข้างใน ให้ดันให้อยู่กลางจริง ๆ */
+  .seating-title > span {
+    margin: 0 auto !important;
+  }
 
   /* ——— Form ——— */
   .input-container{ margin-bottom:12px; }
