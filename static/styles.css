@@ -215,3 +215,33 @@ footer{
 .welcome-cta:hover{ transform:translateY(-1px); }
 .welcome-cta:active{ transform:translateY(0); }
 .welcome-hint{ text-align:center; color:#5e6a80; font-size:13px; }
+
+@media (max-width: 768px) {
+    .welcome-card {
+        width: 85%;         /* เดิม min(600px, 88vw) */
+        padding: 18px 16px; /* ลด padding ด้านใน */
+    }
+
+    .welcome-logo {
+        width: 66px; /* ลดขนาดโลโก้ */
+    }
+
+    .welcome-title {
+        font-size: clamp(18px, 2vw, 20px); /* ลด font ข้อความหัวเรื่อง */
+    }
+
+    .welcome-sub, 
+    .welcome-day {
+        font-size: clamp(13px, 1.5vw, 16px); /* ลด font ข้อความรอง */
+    }
+
+    .welcome-cta {
+        width: 90%;  /* ปุ่มเล็กลงหน่อย */
+        padding: 12px 10px;
+        font-size: clamp(13px, 1.8vw, 16px);
+    }
+
+    .welcome-hint {
+        font-size: 12px;
+    }
+}
