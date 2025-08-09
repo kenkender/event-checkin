@@ -2,112 +2,161 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin | Check-in Logs</title>
+  <title>Admin | Check‑in Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- ใช้สไตล์หลักของหน้าโปรเจกต์ -->
   <link rel="stylesheet" href="static/styles.css" />
   <style>
+    /* ===== Admin-only styles (เสริมจาก styles.css) ===== */
     .admin-wrap{max-width:1200px;margin:40px auto;padding:0 16px}
+    .admin-topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .admin-title{color:#ffe957;margin:0;font-size:2rem;font-weight:800;letter-spacing:.5px}
+
+    .admin-controls{display:flex;gap:10px;align-items:center}
+    .admin-controls input{
+      padding:10px 12px;border-radius:12px;border:none;outline:none;
+      background:#f5f6fb; font-size:1rem;
+      box-shadow:0 2px 12px #0002;
+    }
+    .admin-controls .btn{
+      padding:10px 16px;border-radius:12px;border:none;cursor:pointer;font-weight:700;
+      background:linear-gradient(90deg,#e32c2c 30%,#ffe957 100%); color:#1e1e1e;
+      box-shadow:0 2px 18px #e32c2c33;
+    }
+    .admin-controls .btn:active{transform:scale(.98)}
+
     .admin-grid{display:grid;grid-template-columns:1fr;gap:22px}
-    @media(min-width:1000px){.admin-grid{grid-template-columns:1fr 1fr}}
-    .card{background:rgba(20,34,54,.78);border:1px solid #ffe95744;border-radius:18px;padding:18px 16px;color:#eaf1fa}
-    .card h3{color:#ffe957;margin:0 0 10px}
+    @media (min-width:1000px){ .admin-grid{grid-template-columns:1fr 1fr} }
+
+    .card{
+      background:rgba(20,34,54,.78);
+      border:1px solid #ffe95744;
+      border-radius:18px;
+      padding:18px 16px;
+      color:#eaf1fa;
+      box-shadow:0 8px 32px rgba(23,34,59,.35);
+    }
+    .card h3{color:#ffe957;margin:0 0 12px 0;font-size:1.25rem}
+
     table{width:100%;border-collapse:collapse;font-size:.95rem;background:#eaf1fa;color:#1d2b45;border-radius:12px;overflow:hidden}
     th,td{padding:10px 12px;border-bottom:1px solid #d9e2f3}
     thead th{background:#f3f6ff;text-align:left}
-    .topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .topbar input{padding:8px 10px;border-radius:10px;border:none}
-    .badge{display:inline-block;background:#ffe957;color:#1d2b45;padding:2px 8px;border-radius:999px;font-weight:700}
+    tbody tr:hover{background:#f7f9ff}
   </style>
 </head>
 <body>
   <div class="admin-wrap">
-    <div class="topbar">
-      <h2 style="color:#ffe957;margin:0">Admin Dashboard</h2>
-      <div>
+    <!-- Topbar -->
+    <div class="admin-topbar">
+      <h1 class="admin-title">Admin Dashboard</h1>
+      <div class="admin-controls">
         <input id="adminKey" type="password" placeholder="Enter Admin Key" />
-        <button class="checkin-btn" id="btnLoad" style="width:auto;padding:8px 16px;border-radius:10px">
-          Load Data
-        </button>
+        <button class="btn" id="btnLoad">Load Data</button>
       </div>
     </div>
 
+    <!-- Two columns -->
     <div class="admin-grid">
-      <div class="card">
+      <!-- Check-in logs -->
+      <section class="card">
         <h3>Check-in Logs</h3>
-        <table id="tblLogs">
+        <table id="tblLogs" aria-label="Check-in logs table">
           <thead>
             <tr>
-              <th>#</th><th>Name</th><th>Seat</th><th>Seat EN</th><th>IP</th><th>Time</th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Seat</th>
+              <th>Seat EN</th>
+              <th>IP</th>
+              <th>Time</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
-      </div>
+      </section>
 
-      <div class="card">
+      <!-- Guest list -->
+      <section class="card">
         <h3>Guest List</h3>
-        <table id="tblGuests">
+        <table id="tblGuests" aria-label="Guests table">
           <thead>
-            <tr><th>Name (key)</th><th>Seat</th><th>Seat EN</th></tr>
+            <tr>
+              <th>Name (key)</th>
+              <th>Seat</th>
+              <th>Seat EN</th>
+            </tr>
           </thead>
           <tbody></tbody>
         </table>
-      </div>
+      </section>
     </div>
   </div>
 
-<script>
-const $ = (s, p=document) => p.querySelector(s);
-const $$ = (s, p=document) => [...p.querySelectorAll(s)];
+  <script>
+    // Helper selectors
+    const $ = (s, p=document) => p.querySelector(s);
 
-const keyInput = $('#adminKey');
-const btnLoad = $('#btnLoad');
+    const keyInput = $('#adminKey');
+    const btnLoad  = $('#btnLoad');
 
-function getKey(){
-  return keyInput.value || localStorage.getItem('ADMIN_KEY') || '';
-}
-function saveKey(k){ localStorage.setItem('ADMIN_KEY', k); }
+    // อ่าน/จำ Admin Key
+    const savedKey = localStorage.getItem('ADMIN_KEY');
+    if (savedKey) keyInput.value = savedKey;
 
-async function fetchJSON(url){
-  const key = getKey();
-  if(!key){ alert('กรอก Admin Key ก่อน'); return null; }
-  const res = await fetch(url, { headers: { 'X-Admin-Key': key } });
-  if(!res.ok){
-    alert('Auth failed / ใส่คีย์ไม่ถูกต้อง');
-    return null;
-  }
-  return res.json();
-}
+    function getKey(){
+      return keyInput.value || localStorage.getItem('ADMIN_KEY') || '';
+    }
+    function saveKey(k){ localStorage.setItem('ADMIN_KEY', k); }
 
-btnLoad.addEventListener('click', async ()=>{
-  const k = keyInput.value.trim();
-  if(k) saveKey(k);
+    async function fetchJSON(url){
+      const key = getKey();
+      if(!key){ alert('กรอก Admin Key ก่อน'); return null; }
+      const res = await fetch(url, { headers: { 'X-Admin-Key': key } });
+      if(!res.ok){
+        alert('Auth failed / ใส่คีย์ไม่ถูกต้อง');
+        return null;
+      }
+      return res.json();
+    }
 
-  const logs = await fetchJSON('/api/admin/checkins');
-  const guests = await fetchJSON('/api/admin/guests');
-  if(!logs || !guests) return;
+    function renderLogs(data){
+      const tb = $('#tblLogs tbody');
+      tb.innerHTML = (data.items || []).map((r, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${r.name || '-'}</td>
+          <td>${r.seat || '-'}</td>
+          <td>${r.seat_en || '-'}</td>
+          <td>${r.ip || '-'}</td>
+          <td>${r.created_at || '-'}</td>
+        </tr>
+      `).join('');
+    }
 
-  const tb1 = $('#tblLogs tbody');
-  tb1.innerHTML = logs.items.map((r, i)=>`
-    <tr>
-      <td>${i+1}</td>
-      <td>${r.name || '-'}</td>
-      <td>${r.seat || '-'}</td>
-      <td>${r.seat_en || '-'}</td>
-      <td>${r.ip || '-'}</td>
-      <td>${r.created_at}</td>
-    </tr>
-  `).join('');
+    function renderGuests(data){
+      const tb = $('#tblGuests tbody');
+      tb.innerHTML = (data.items || []).map(g => `
+        <tr>
+          <td>${g.name}</td>
+          <td>${g.seat}</td>
+          <td>${g.seat_en}</td>
+        </tr>
+      `).join('');
+    }
 
-  const tb2 = $('#tblGuests tbody');
-  tb2.innerHTML = guests.items.map(g=>`
-    <tr><td>${g.name}</td><td>${g.seat}</td><td>${g.seat_en}</td></tr>
-  `).join('');
-});
+    // ปุ่มโหลดข้อมูล
+    btnLoad.addEventListener('click', async () => {
+      const k = keyInput.value.trim();
+      if (k) saveKey(k);
 
-// auto-fill key if saved
-const saved = localStorage.getItem('ADMIN_KEY');
-if(saved){ keyInput.value = saved; }
-</script>
+      const [logs, guests] = await Promise.all([
+        fetchJSON('/api/admin/checkins'),
+        fetchJSON('/api/admin/guests')
+      ]);
+
+      if (logs)   renderLogs(logs);
+      if (guests) renderGuests(guests);
+    });
+  </script>
 </body>
 </html>
