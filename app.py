@@ -10,6 +10,10 @@ import csv
 import os
 import sqlite3
 from contextlib import contextmanager
+from datetime import datetime, timezone, timedelta
+
+TH_TZ = timezone(timedelta(hours=7))  # Asia/Bangkok (+07:00)
+
 
 # -----------------------------
 # Environment
@@ -111,6 +115,8 @@ async def checkin(request: Request, name: str = Form(...)):
     # เก็บ context สำหรับ log
     ua = request.headers.get("user-agent", "-")
     ip = request.client.host if request.client else "-"
+    now_th = datetime.now(TH_TZ).strftime("%Y-%m-%d %H:%M:%S")
+
 
     if found:
         # log สำเร็จ
@@ -119,15 +125,17 @@ async def checkin(request: Request, name: str = Form(...)):
                 "INSERT INTO checkins (name, seat, seat_en, user_agent, ip) VALUES (?,?,?,?,?)",
                 (name.strip(), found["seat"], found["seat_en"], ua, ip),
             )
+
             conn.commit()
         return {"success": True, "seat": found["seat"], "seat_en": found["seat_en"]}
     else:
         # log ไม่พบชื่อ (seat = NULL)
         with get_conn() as conn:
             conn.execute(
-                "INSERT INTO checkins (name, seat, seat_en, user_agent, ip) VALUES (?,?,?,?,?)",
-                (name.strip(), None, None, ua, ip),
+                "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) VALUES (?,?,?,?,?,?)",
+                (name.strip(), None, None, ua, ip, now_th),
             )
+
             conn.commit()
         return {"success": False, "error": "ไม่พบชื่อในระบบ / Name not found."}
 
