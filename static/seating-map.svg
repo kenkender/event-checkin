@@ -16,11 +16,11 @@
   animation: seat-blink 0.7s cubic-bezier(.7,.1,1,1.1) 0s infinite alternate;
 }
 @keyframes seat-fill-blink {
-  0%   { fill: #ffe957; filter: drop-shadow(0 0 18px #ffe95766);}
+  0%   { fill:rgb(48, 120, 255); filter: drop-shadow(0 0 18px #ffe95766);}
   40%  { fill: #e32c2c; filter: drop-shadow(0 0 36px #e32c2c77);}
   60%  { fill: #5776ffff; filter: drop-shadow(0 0 46px #ffe957aa);}
-  80%  { fill: #87ff57ff; filter: drop-shadow(0 0 24px #ffe957cc);}
-  100% { fill: #ffe957; filter: drop-shadow(0 0 16px #ffe957cc);}
+  80%  { fill:rgb(255, 93, 87); filter: drop-shadow(0 0 24px #ffe957cc);}
+  100% { fill:rgb(87, 140, 255); filter: drop-shadow(0 0 16px #ffe957cc);}
 }
 rect.seat-bg-highlight {
   fill: #ff95e8ff !important;
