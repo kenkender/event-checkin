@@ -225,7 +225,7 @@ footer{
 
   /* ——— Form ——— */
   .input-container{ margin-bottom:12px; }
-  input[type="text"]{ font-size:1rem; padding:10px 12px; border-radius:10px; }
+  input[type="text"]{ font-size:1rem; padding:10px 10px; border-radius:10px; }
   .checkin-btn{ font-size:1.05rem; padding:12px 0; border-radius:12px; }
   #result{ font-size:1.05rem; }
 
