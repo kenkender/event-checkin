@@ -10,10 +10,10 @@ import csv
 import os
 import sqlite3
 from contextlib import contextmanager
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta  # << เพิ่ม
 
-TH_TZ = timezone(timedelta(hours=7))  # Asia/Bangkok (+07:00)
-
+# ----- Timezone Thailand (+07:00)
+TH_TZ = timezone(timedelta(hours=7))               # << เพิ่ม
 
 # -----------------------------
 # Environment
@@ -115,17 +115,17 @@ async def checkin(request: Request, name: str = Form(...)):
     # เก็บ context สำหรับ log
     ua = request.headers.get("user-agent", "-")
     ip = request.client.host if request.client else "-"
-    now_th = datetime.now(TH_TZ).strftime("%Y-%m-%d %H:%M:%S")
 
+    # เวลาไทย ณ ขณะนี้ (รูปแบบ YYYY-MM-DD HH:MM:SS)
+    now_th = datetime.now(TH_TZ).strftime("%Y-%m-%d %H:%M:%S")  # << ใช้เวลาประเทศไทย
 
     if found:
         # log สำเร็จ
         with get_conn() as conn:
             conn.execute(
-                "INSERT INTO checkins (name, seat, seat_en, user_agent, ip) VALUES (?,?,?,?,?)",
-                (name.strip(), found["seat"], found["seat_en"], ua, ip),
+                "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) VALUES (?,?,?,?,?,?)",
+                (name.strip(), found["seat"], found["seat_en"], ua, ip, now_th),
             )
-
             conn.commit()
         return {"success": True, "seat": found["seat"], "seat_en": found["seat_en"]}
     else:
@@ -135,7 +135,6 @@ async def checkin(request: Request, name: str = Form(...)):
                 "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) VALUES (?,?,?,?,?,?)",
                 (name.strip(), None, None, ua, ip, now_th),
             )
-
             conn.commit()
         return {"success": False, "error": "ไม่พบชื่อในระบบ / Name not found."}
 
@@ -169,20 +168,16 @@ def api_admin_guests(request: Request):
 # -----------------------------
 # Static / Pages
 # -----------------------------
-# เสิร์ฟไฟล์ static/*
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# หน้า frontend หลัก
 @app.get("/")
 def main_page():
     return FileResponse("index.html")
 
-# หน้า admin UI (คุณต้องมีไฟล์ admin.html อยู่ในโฟลเดอร์เดียวกับ app.py)
 @app.get("/admin")
 def admin_page():
     return FileResponse("admin.html")
 
-# (ไม่บังคับ) healthcheck
 @app.get("/health")
 def health():
     return {"ok": True}
