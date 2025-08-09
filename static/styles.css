@@ -155,7 +155,7 @@ footer{
   .seating-title > span{ margin:0 auto !important; }
 
   /* ฟอร์มและปุ่มให้กะทัดรัด */
-  .input-container{ margin-bottom:10px; }
+  .input-container{ margin-bottom:6px; }
   input[type="text"]{ font-size:0.98rem; padding:9px 10px; border-radius:10px; }
   .checkin-btn{ font-size:1.0rem; padding:10px 0; border-radius:12px; }
   #result{ font-size:1.0rem; }
@@ -179,7 +179,7 @@ footer{
 @media (max-width:480px){
   html{ font-size:14.8px; }
   .main-title{ font-size:1.35rem; }
-  .checkin-btn{ font-size:1rem; padding:11px 0; }
+  .checkin-btn{ font-size:1rem; padding:6px 0; }
   #result{ font-size:1rem; }
   .modal-content{ max-height:60vh; }
 }
