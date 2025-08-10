@@ -172,61 +172,58 @@ def seat_to_en(s: str) -> str:
 @app.post("/checkin")
 async def checkin(request: Request, name: str = Form(...)):
     guests = load_guests()
-    name_key = (name or "").strip().lower()
-    found_key = None
-    for guest_name in guests:
-        if name_key == guest_name or name_key in guest_name:
-            found_key = guest_name
+    name_raw = (name or "").strip()
+    name_key = name_raw.lower()
+
+    # หาในรายชื่อ (ยอมรับพิมพ์แค่บางส่วน)
+    found = None
+    matched_key = None
+    for gk, gv in guests.items():
+        if name_key in gk:
+            found = gv
+            matched_key = gk
             break
 
-
+    # context สำหรับ log
     ua = request.headers.get("user-agent", "-")
     ip = request.client.host if request.client else "-"
     now_th = datetime.now(TH_TZ).strftime("%Y-%m-%d %H:%M:%S")
 
-    if found_key:
-        found = guests[found_key]
-        display = found.get("display_name") or found_key
-
-        # ✅ เช็คว่ามีการเช็คอินไปแล้วที่ seat นี้หรือยัง
+    # ถ้าไม่พบชื่อใน master
+    if not found:
+        # log ความพยายามที่ไม่พบชื่อไว้เหมือนเดิม
         with get_conn() as conn:
-            existed = conn.execute(
-                "SELECT id FROM checkins WHERE seat=? LIMIT 1",
-                (found["seat"],)
-            ).fetchone()
-
-            if existed:
-                # ➜ ไม่บันทึกซ้ำ, แจ้งสถานะ already:true
-                return {
-                    "success": True,
-                    "seat": found["seat"],
-                    "seat_en": found["seat_en"],
-                    "already": True
-                }
-
-            # ➜ ยังไม่เคยเช็คอินที่ seat นี้: บันทึกใหม่ตามปกติ
+            
             conn.execute(
-                "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) VALUES (?,?,?,?,?,?)",
-                (display, found["seat"], found["seat_en"], ua, ip, now_th),
-            )
-            conn.commit()
-
-        return {
-            "success": True,
-            "seat": found["seat"],
-            "seat_en": found["seat_en"],
-            "already": False
-        }
-
-    else:
-        with get_conn() as conn:
-            conn.execute(
-                "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) VALUES (?,?,?,?,?,?)",
-                ((name or "").strip(), None, None, ua, ip, now_th),
+                "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) "
+                "VALUES (?,?,?,?,?,?)",
+                (name_raw, None, None, ua, ip, now_th),
             )
             conn.commit()
         return {"success": False, "error": "ไม่พบชื่อในระบบ / Name not found."}
 
+    seat = found["seat"]
+    seat_en = found["seat_en"]
+
+    # ตรวจว่าเคยเช็คอินแล้วหรือยัง (ถือว่า 'เคย' ถ้ามีชื่อ+ที่นั่งนี้อย่างน้อย 1 แถว)
+    # ปล. ถ้าคุณต้องการให้เทียบด้วย "ชื่อเต็มตามฐาน" ให้เปลี่ยน name_raw เป็น matched_key หรือชื่อ canonical ที่คุณเก็บไว้
+    already = False
+    with get_conn() as conn:
+        row = conn.execute(
+            "SELECT 1 AS ok FROM checkins WHERE name=? AND seat=? LIMIT 1",
+            (name_raw, seat),
+        ).fetchone()
+        already = bool(row)
+
+        # จะบันทึก log การเช็คอินซ้ำด้วยก็ได้ (ช่วยให้เห็นประวัติ)
+        conn.execute(
+            "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) "
+            "VALUES (?,?,?,?,?,?)",
+            (name_raw, seat, seat_en, ua, ip, now_th),
+        )
+        conn.commit()
+
+    return {"success": True, "seat": seat, "seat_en": seat_en, "already": already}
 
 
 # -----------------------------

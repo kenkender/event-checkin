@@ -84,34 +84,38 @@ async function checkIn(){
   formData.append('name', name);
 
   try{
-    const res  = await fetch('/checkin', { method:'POST', body:formData });
-    const data = await res.json();
+  const res  = await fetch('/checkin', { method:'POST', body:formData });
+  const data = await res.json();
 
-    if(data.success){
-      showResult(
-        `✅ เช็คอินสำเร็จ! ที่นั่งของคุณคือ <span style="color:#e32c2c">${data.seat}</span><br>
-         <span style="color:#ffe957;font-size:0.97em;">Check-in successful! Your seat is<br><span style="color:#e32c2c">${data.seat_en || data.seat}</span></span>`,
-        true
-      );
-      highlightSeat(data.seat);
-      
-      // ✅ ถ้าเป็นการเช็คอินซ้ำ ➜ เปิดป๊อปอัปแจ้งเตือน
-    if (data.already === true) {
-    openDupModal(
-      `คุณได้เช็คอินเรียบร้อยแล้ว ที่นั่งของคุณคือ <b>${data.seat}</b><br>
-       <span style="font-size:.95em;color:#345;">You have already checked in. Your seat is <b>${data.seat_en || data.seat}</b>.</span>`
+  if(data.success){
+    // แสดงผลปกติ
+    showResult(
+      `✅ เช็คอินสำเร็จ! ที่นั่งของคุณคือ <span style="color:#e32c2c">${data.seat}</span><br>
+       <span style="color:#ffe957;font-size:0.97em;">Check-in successful! Your seat is<br><span style="color:#e32c2c">${data.seat_en || data.seat}</span></span>`,
+      true
     );
-  }
-    }else{
-      showResult(data.error, false);
-      highlightSeat(null);
+    highlightSeat(data.seat);
+
+    // ถ้าเช็คอินซ้ำ => เปิด modal แจ้งเตือน
+    if (data.already) {
+      openDupModal(`
+        <div style="margin-bottom:8px;">คุณได้เช็คอินเรียบร้อยแล้ว</div>
+        <div style="font-weight:700; margin-bottom:6px;">
+          ที่นั่งของคุณคือ <span style="color:#e32c2c">${data.seat}</span>
+        </div>
+        <div style="opacity:.9">You have already checked in.<br>Your seat is <b>${data.seat_en || data.seat}</b>.</div>
+      `);
     }
-  }catch(e){
-    showResult('เกิดข้อผิดพลาดกับเซิร์ฟเวอร์ / Server error', false);
+  }else{
+    showResult(data.error, false);
     highlightSeat(null);
-  }finally{
-    setBtnLoading(false);
   }
+}catch(e){
+  showResult("เกิดข้อผิดพลาดกับเซิร์ฟเวอร์ / Server error", false);
+  highlightSeat(null);
+}finally{
+  setBtnLoading(false);
+}
 }
 
 function showResult(msg, success){
@@ -224,3 +228,34 @@ document.addEventListener('DOMContentLoaded', () => {
   // แสดงทุกครั้งที่รีเฟรช
   openWelcomeModal();
 });
+
+function openDupModal(msgHtml){
+  const m = document.getElementById('dupModal');
+  const body = document.getElementById('dupBody');
+  const ok = document.getElementById('dupOkBtn');
+  const x = document.getElementById('dupCloseBtn');
+  if(!m || !body) return;
+  body.innerHTML = msgHtml;
+  m.classList.add('open');
+  m.setAttribute('aria-hidden','false');
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  const close = () => closeDupModal();
+  if(ok) ok.onclick = close;
+  if(x)  x.onclick  = close;
+  m.onclick = (e)=>{ if(e.target === m) closeDupModal(); };
+  document.addEventListener('keydown', escCloseOnce);
+}
+function escCloseOnce(e){
+  const m = document.getElementById('dupModal');
+  if(e.key === 'Escape' && m && m.classList.contains('open')) closeDupModal();
+  document.removeEventListener('keydown', escCloseOnce);
+}
+function closeDupModal(){
+  const m = document.getElementById('dupModal');
+  if(!m) return;
+  m.classList.remove('open');
+  m.setAttribute('aria-hidden','true');
+  document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+}
