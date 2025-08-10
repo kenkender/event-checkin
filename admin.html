@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin | Check-in Logs</title>
+  <title>Admin | Check-in Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="static/styles.css" />
 </head>
@@ -17,8 +17,57 @@
       </div>
     </div>
 
-    <!-- Two cards -->
+    <!-- 3 cards grid: Add Guest | Guests | Check-in Logs -->
     <div class="admin-grid">
+      <!-- Add Guest -->
+      <section class="admin-card">
+        <div class="card-head"><h2>เพิ่มรายชื่อผู้เข้าร่วม (Add Guest)</h2></div>
+        <div class="card-body">
+          <div class="form-row">
+            <label>ชื่อ-นามสกุล</label>
+            <input id="newName" type="text" placeholder="เช่น สมชาย ใจดี" />
+          </div>
+
+          <div class="form-row cols-3">
+            <div>
+              <label>โต๊ะ (A–L)</label>
+              <select id="selTable"></select>
+            </div>
+            <div>
+              <label>เลขที่นั่ง (1–9)</label>
+              <select id="selNo"></select>
+            </div>
+            <div>
+              <label>รหัสที่นั่ง</label>
+              <input id="seatPreview" type="text" readonly />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button id="btnAdd" type="button" class="btn-primary">เพิ่มผู้เข้าร่วม</button>
+            <small class="muted">ระบบจะตั้งค่า <code>seat_en</code> เป็น “Table &lt;รหัสที่นั่ง&gt;” อัตโนมัติ</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- Guests table -->
+      <section class="admin-card">
+        <div class="card-head"><h2>Guest List</h2></div>
+        <div class="card-body">
+          <table class="admin-table" id="tblGuests">
+            <thead>
+              <tr>
+                <th>Name (key)</th>
+                <th>Seat</th>
+                <th>Seat EN</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Check-in logs -->
       <section class="admin-card">
         <div class="card-head"><h2>Check-in Logs</h2></div>
         <div class="card-body">
@@ -37,33 +86,22 @@
           </table>
         </div>
       </section>
-
-      <section class="admin-card">
-        <div class="card-head"><h2>Guest List</h2></div>
-        <div class="card-body">
-          <table class="admin-table" id="tblGuests">
-            <thead>
-              <tr>
-                <th>Name (key)</th>
-                <th>Seat</th>
-                <th>Seat EN</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </section>
     </div>
   </div>
 
   <script>
-    const $ = (s, p=document)=>p.querySelector(s);
-
-    const keyInput = $('#adminKey');
+    /** ---------- helpers ---------- */
+    const $ = (s, p = document) => p.querySelector(s);
+    const adminKeyInput = $('#adminKey');
     const btnLoad  = $('#btnLoad');
+    const btnAdd   = $('#btnAdd');
+    const selTable = $('#selTable');
+    const selNo    = $('#selNo');
+    const seatPreview = $('#seatPreview');
+    const nameInput   = $('#newName');
 
     function getKey(){
-      return keyInput.value || localStorage.getItem('ADMIN_KEY') || '';
+      return adminKeyInput.value || localStorage.getItem('ADMIN_KEY') || '';
     }
     function saveKey(k){ localStorage.setItem('ADMIN_KEY', k); }
 
@@ -74,9 +112,37 @@
       if(!res.ok){ alert('Auth failed / ใส่คีย์ไม่ถูกต้อง'); return null; }
       return res.json();
     }
+    async function postJSON(url, body){
+      const key = getKey();
+      if(!key){ alert('กรอก Admin Key ก่อน'); return null; }
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'X-Admin-Key': key },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok){
+        alert(data.error || 'Request failed');
+        return null;
+      }
+      return data;
+    }
 
-    btnLoad.addEventListener('click', async ()=>{
-      const k = keyInput.value.trim(); if(k) saveKey(k);
+    /** ---------- fill selects A–L & 1–9 ---------- */
+    (function fillSeatSelectors(){
+      const letters = 'ABCDEFGHIJKL'.split('');
+      selTable.innerHTML = letters.map(l => `<option value="${l}">${l}</option>`).join('');
+      selNo.innerHTML = Array.from({length:9}, (_,i)=>i+1)
+        .map(n => `<option value="${n}">${n}</option>`).join('');
+      const updatePreview = () => seatPreview.value = selTable.value + selNo.value;
+      selTable.addEventListener('change', updatePreview);
+      selNo.addEventListener('change', updatePreview);
+      updatePreview();
+    })();
+
+    /** ---------- load data into tables ---------- */
+    async function loadAll(){
+      const k = adminKeyInput.value.trim(); if(k) saveKey(k);
 
       const logs   = await fetchJSON('/api/admin/checkins');
       const guests = await fetchJSON('/api/admin/guests');
@@ -100,10 +166,31 @@
           <td>${g.seat}</td>
           <td>${g.seat_en}</td>
         </tr>`).join('');
+    }
+    btnLoad.addEventListener('click', loadAll);
+
+    /** ---------- add guest ---------- */
+    btnAdd.addEventListener('click', async ()=>{
+      const name = nameInput.value.trim();
+      if(!name){ alert('กรุณากรอกชื่อ-นามสกุล'); nameInput.focus(); return; }
+      const seat = selTable.value + selNo.value;
+      const ok = await postJSON('/api/admin/guest', {
+        name,
+        seat,
+        seat_en: `Table ${seat}`  // เซ็ตให้ backend ได้เลย ถ้า backend ตั้งเองอยู่แล้ว ก็ไม่เป็นไร
+      });
+      if(!ok) return;
+      alert('เพิ่มผู้เข้าร่วมสำเร็จ');
+      nameInput.value = '';
+      await loadAll();
     });
 
+    /** ---------- keep admin key ---------- */
     const saved = localStorage.getItem('ADMIN_KEY');
-    if(saved) keyInput.value = saved;
+    if(saved) adminKeyInput.value = saved;
+
+    // auto-load ถ้ามีคีย์แล้ว
+    if(saved) loadAll();
   </script>
 </body>
 </html>
