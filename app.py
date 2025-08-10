@@ -186,14 +186,38 @@ async def checkin(request: Request, name: str = Form(...)):
 
     if found_key:
         found = guests[found_key]
-        display = found.get("display_name") or found_key  # << ใช้ชื่อนี้ลง log
+        display = found.get("display_name") or found_key
+
+        # ✅ เช็คว่ามีการเช็คอินไปแล้วที่ seat นี้หรือยัง
         with get_conn() as conn:
+            existed = conn.execute(
+                "SELECT id FROM checkins WHERE seat=? LIMIT 1",
+                (found["seat"],)
+            ).fetchone()
+
+            if existed:
+                # ➜ ไม่บันทึกซ้ำ, แจ้งสถานะ already:true
+                return {
+                    "success": True,
+                    "seat": found["seat"],
+                    "seat_en": found["seat_en"],
+                    "already": True
+                }
+
+            # ➜ ยังไม่เคยเช็คอินที่ seat นี้: บันทึกใหม่ตามปกติ
             conn.execute(
                 "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) VALUES (?,?,?,?,?,?)",
                 (display, found["seat"], found["seat_en"], ua, ip, now_th),
             )
             conn.commit()
-        return {"success": True, "seat": found["seat"], "seat_en": found["seat_en"]}
+
+        return {
+            "success": True,
+            "seat": found["seat"],
+            "seat_en": found["seat_en"],
+            "already": False
+        }
+
     else:
         with get_conn() as conn:
             conn.execute(
@@ -202,6 +226,7 @@ async def checkin(request: Request, name: str = Form(...)):
             )
             conn.commit()
         return {"success": False, "error": "ไม่พบชื่อในระบบ / Name not found."}
+
 
 
 # -----------------------------

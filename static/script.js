@@ -94,6 +94,14 @@ async function checkIn(){
         true
       );
       highlightSeat(data.seat);
+      
+      // ✅ ถ้าเป็นการเช็คอินซ้ำ ➜ เปิดป๊อปอัปแจ้งเตือน
+    if (data.already === true) {
+    openDupModal(
+      `คุณได้เช็คอินเรียบร้อยแล้ว ที่นั่งของคุณคือ <b>${data.seat}</b><br>
+       <span style="font-size:.95em;color:#345;">You have already checked in. Your seat is <b>${data.seat_en || data.seat}</b>.</span>`
+    );
+  }
     }else{
       showResult(data.error, false);
       highlightSeat(null);
@@ -192,6 +200,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', (e) => {
     if(modal.classList.contains('open') && e.key === 'Escape') closeWelcomeModal();
   });
+
+  function openDupModal(html){
+  const m = document.getElementById('dupModal');
+  const msg = document.getElementById('dupMsg');
+  if(!m || !msg) return;
+  msg.innerHTML = html;
+  m.classList.add('open');
+}
+function closeDupModal(){
+  const m = document.getElementById('dupModal');
+  if(!m) return;
+  m.classList.remove('open');
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const m = document.getElementById('dupModal');
+  const x = document.getElementById('dupCloseBtn');
+  if(x) x.addEventListener('click', closeDupModal);
+  if(m) m.addEventListener('click', (e)=>{ if(e.target === m) closeDupModal(); });
+});
+
 
   // แสดงทุกครั้งที่รีเฟรช
   openWelcomeModal();
