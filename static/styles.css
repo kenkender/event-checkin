@@ -190,13 +190,7 @@ footer{
   #seating-map-modal{ width:100% !important; height:auto !important; display:block; margin:0 auto; }
 }
 
-@media (max-width:480px){
-  html{ font-size:14.8px; }
-  .main-title{ font-size:1.35rem; }
-  .checkin-btn{ font-size:1rem; padding:11px 0; }
-  #result{ font-size:1rem; }
-  .modal-content{ max-height:60vh; }
-}
+
 
 
 /* ========================================================================== */
