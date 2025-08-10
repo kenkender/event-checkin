@@ -17,11 +17,46 @@
       </div>
     </div>
 
-    <!-- 3 cards grid: Add Guest | Guests | Check-in Logs -->
+    <!-- GRID: Logs | Guests | Add Guest (bottom) -->
     <div class="admin-grid">
-      <!-- Add Guest -->
+      <!-- Check-in logs (บนซ้าย) -->
       <section class="admin-card">
-        <div class="card-head"><h2>เพิ่มรายชื่อผู้เข้าร่วม (Add Guest)</h2></div>
+        <div class="card-head"><h2>Check-in Logs</h2></div>
+        <div class="card-body">
+          <table class="admin-table" id="tblLogs">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Seat</th>
+                <th>IP</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Guest list (บนขวา) -->
+      <section class="admin-card">
+        <div class="card-head"><h2>Guest List</h2></div>
+        <div class="card-body">
+          <table class="admin-table" id="tblGuests">
+            <thead>
+              <tr>
+                <th>ชื่อ (Name)</th>
+                <th>โต๊ะ (Seat)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Add Guest (ล่างสุด) -->
+      <section class="admin-card">
+        <div class="card-head"><h2>เพิ่มรายชื่อผู้เข้าร่วมงาน (Add Guest)</h2></div>
         <div class="card-body">
           <div class="form-row">
             <label>ชื่อ-นามสกุล</label>
@@ -44,53 +79,16 @@
           </div>
 
           <div class="form-actions">
-            <button id="btnAdd" type="button" class="btn-primary">เพิ่มผู้เข้าร่วม</button>
-            <small class="muted">* ระบบจะตั้งค่า <code>seat_en</code> เป็น “Table &lt;รหัสที่นั่ง&gt;” อัตโนมัติ</small>
+            <button id="btnAdd" type="button" class="btn-primary">เพิ่มผู้เข้าร่วมงาน</button>
+            <small class="muted">* ระบบจะตั้งค่า <code>seat_en</code> เป็น “Table &lt;และรหัสที่นั่ง&gt;” อัตโนมัติ</small>
           </div>
-        </div>
-      </section>
-
-      <!-- Guests table -->
-      <section class="admin-card">
-        <div class="card-head"><h2>Guest List</h2></div>
-        <div class="card-body">
-          <table class="admin-table" id="tblGuests">
-            <thead>
-              <tr>
-                <th>Name (key)</th>
-                <th>Seat</th>
-                <th>Seat EN</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Check-in logs -->
-      <section class="admin-card">
-        <div class="card-head"><h2>Check-in Logs</h2></div>
-        <div class="card-body">
-          <table class="admin-table" id="tblLogs">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Seat</th>
-                <th>Seat EN</th>
-                <th>IP</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
         </div>
       </section>
     </div>
   </div>
 
   <script>
-    /** ---------- helpers ---------- */
+    /* ---------- helpers ---------- */
     const $ = (s, p = document) => p.querySelector(s);
     const adminKeyInput = $('#adminKey');
     const btnLoad  = $('#btnLoad');
@@ -122,13 +120,13 @@
       });
       const data = await res.json().catch(()=> ({}));
       if(!res.ok){
-        alert(data.detail || data.error || 'Request failed');
+        alert(data.error || 'Request failed');
         return null;
       }
       return data;
     }
 
-    /** ---------- fill selects A–L & 1–9 ---------- */
+    /* ---------- fill A–L & 1–9 ---------- */
     (function fillSeatSelectors(){
       const letters = 'ABCDEFGHIJKL'.split('');
       selTable.innerHTML = letters.map(l => `<option value="${l}">${l}</option>`).join('');
@@ -140,7 +138,7 @@
       updatePreview();
     })();
 
-    /** ---------- load data into tables ---------- */
+    /* ---------- load tables ---------- */
     async function loadAll(){
       const k = adminKeyInput.value.trim(); if(k) saveKey(k);
 
@@ -154,7 +152,6 @@
           <td>${i+1}</td>
           <td>${r.name || '-'}</td>
           <td>${r.seat || '-'}</td>
-          <td>${r.seat_en || '-'}</td>
           <td>${r.ip || '-'}</td>
           <td>${r.created_at}</td>
         </tr>`).join('');
@@ -164,12 +161,11 @@
         <tr>
           <td>${g.name}</td>
           <td>${g.seat}</td>
-          <td>${g.seat_en}</td>
         </tr>`).join('');
     }
     btnLoad.addEventListener('click', loadAll);
 
-    /** ---------- add guest ---------- */
+    /* ---------- add guest ---------- */
     btnAdd.addEventListener('click', async ()=>{
       const name = nameInput.value.trim();
       if(!name){ alert('กรุณากรอกชื่อ-นามสกุล'); nameInput.focus(); return; }
@@ -187,9 +183,10 @@
       await loadAll();
     });
 
-    /** ---------- keep admin key ---------- */
+    /* ---------- keep key & auto-load ---------- */
     const saved = localStorage.getItem('ADMIN_KEY');
-    if(saved) { adminKeyInput.value = saved; loadAll(); }
+    if(saved) adminKeyInput.value = saved;
+    if(saved) loadAll();
   </script>
 </body>
 </html>

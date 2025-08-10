@@ -357,13 +357,13 @@ footer{
 }
 .admin-table thead th{
   position:sticky; top:0; z-index:1;
-  background:#f3f6ff;
+  background:#1d50dd;
   text-align:left;
   font-weight:800;
 }
 .admin-table th, .admin-table td{
   padding:10px 12px;
-  border-bottom:1px solid #d9e2f3;
+  border-bottom:1px solid #0f45aa;
 }
 
 /* Responsive */
@@ -377,7 +377,7 @@ footer{
 }
 
 /* ===== Admin page ===== */
-.admin-page{ padding:24px; color:#eaf1fa; }
+.admin-page{ padding:24px; color:#004094; }
 .admin-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
 .admin-top h1{ margin:0; font-size:1.6rem; color:#ffe957; }
 .admin-controls{ display:flex; gap:10px; }
@@ -406,19 +406,31 @@ footer{
 
 /* forms */
 .form-row{ display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
-.form-row.cols-3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; }
-.form-row label{ color:#ffe957; font-weight:700; }
-.form-row input, .form-row select{
-  width:100%; padding:10px 12px; border-radius:10px; border:none; background:#f7f8fa;
-}
+.form-row.cols-3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; }
+.form-row label{ color:#ffe957; font-weight:200; }
+.form-row input, .form-row select{ width:80%; padding:10px 15px; border-radius:10px; border:none; background:#f7f8fa;}
 .form-actions{ display:flex; align-items:center; gap:12px; }
+
+#selTable, #selNo, #seatPreview{
+  max-width: 160px;      /* ปรับเลขนี้ได้ เช่น 120–160px */
+}
+@media (max-width: 900px){
+  #selTable, #selNo, #seatPreview{
+    max-width: 100%;
+  }
+}
+
 .btn-primary{
   padding:12px 16px; border:none; border-radius:12px; cursor:pointer;
   background: linear-gradient(90deg,#ffe957 0%, #ffd84a 100%); color:#1b1b1b; font-weight:800;
 }
-.muted{ color:#cbd5e1; }
+.muted{ color:#004599; }
 
 /* tables */
 .admin-table{ width:100%; border-collapse: collapse; }
-.admin-table th, .admin-table td{ padding:8px 10px; border-bottom:1px solid #ffffff15; color:#eaf1fa; }
-.admin-table thead th{ color:#ffe957; text-align:left; }
+.admin-table th, .admin-table td{ padding:8px 10px; text-align:center; border-bottom:1px solid #ffffff15; color:#0836b3; }
+.admin-table thead th{ color:#ffe957; text-align:center; }
+
+#newName{
+  width: 95%;           /* ให้ยืดเต็มความกว้างการ์ด */
+}
