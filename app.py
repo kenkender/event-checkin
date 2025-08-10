@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 import csv
 import sqlite3
+import re
 from contextlib import contextmanager
 from datetime import datetime, timezone, timedelta
 
@@ -92,7 +93,6 @@ def init_db():
                         )
                         conn.commit()
             except FileNotFoundError:
-                # ไม่มี CSV ก็ข้ามไป (ยังใช้งาน API อื่นได้)
                 pass
 
 def load_guests():
@@ -101,7 +101,7 @@ def load_guests():
     รูปแบบผลลัพธ์: { "ชื่อ (lowercase)": {"seat": "...", "seat_en": "..."} }
     """
     result = {}
-    # 1) ลองจาก DB ก่อน
+    # 1) จาก DB
     with get_conn() as conn:
         rows = conn.execute("SELECT name_key, seat, seat_en FROM guests").fetchall()
         for r in rows:
@@ -109,7 +109,7 @@ def load_guests():
     if result:
         return result
 
-    # 2) fallback จาก CSV (กรณีตารางยังว่าง/ไม่มีไฟล์ DB)
+    # 2) fallback จาก CSV
     try:
         with open("guests.csv", encoding="utf-8") as f:
             reader = csv.DictReader(f)
@@ -133,13 +133,24 @@ def on_startup():
     init_db()
 
 # -----------------------------
-# Admin guard
+# Admin utils
 # -----------------------------
+SEAT_PATTERN = re.compile(r"^[A-L][1-9]$", re.IGNORECASE)
+
 def admin_guard(request: Request):
     if not ADMIN_KEY:
         raise HTTPException(status_code=500, detail="Missing ADMIN_KEY")
     if request.headers.get("X-Admin-Key") != ADMIN_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+def normalize_seat(s: str) -> str:
+    s = (s or "").strip().upper()
+    if not SEAT_PATTERN.match(s):
+        raise HTTPException(status_code=400, detail="Seat must be A1..L9")
+    return s
+
+def seat_to_en(s: str) -> str:
+    return f"Table {s}"
 
 # -----------------------------
 # Routes: Check-in (frontend API)
@@ -160,7 +171,6 @@ async def checkin(request: Request, name: str = Form(...)):
     now_th = datetime.now(TH_TZ).strftime("%Y-%m-%d %H:%M:%S")
 
     if found:
-        # log (พบชื่อ)
         with get_conn() as conn:
             conn.execute(
                 "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) "
@@ -170,7 +180,6 @@ async def checkin(request: Request, name: str = Form(...)):
             conn.commit()
         return {"success": True, "seat": found["seat"], "seat_en": found["seat_en"]}
     else:
-        # log (ไม่พบชื่อ)
         with get_conn() as conn:
             conn.execute(
                 "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) "
@@ -206,6 +215,41 @@ def api_admin_guests(request: Request):
     ]
     items.sort(key=lambda x: (x["seat"], x["name"]))
     return {"items": items}
+
+# === Admin: add/insert guest (JSON body) ===
+@app.post("/api/admin/guest")
+async def api_admin_add_guest_json(request: Request):
+    admin_guard(request)
+    body = await request.json()
+    name = (body.get("name") or "").strip()
+    seat = (body.get("seat") or "").strip()
+    seat_en = (body.get("seat_en") or "").strip()
+
+    if not name:
+        raise HTTPException(status_code=400, detail="Name required")
+
+    seat_norm = normalize_seat(seat)
+    if not seat_en:
+        seat_en = seat_to_en(seat_norm)
+
+    name_key = name.lower()
+
+    with get_conn() as conn:
+        # กันที่นั่งซ้ำ
+        dup = conn.execute("SELECT name_key FROM guests WHERE UPPER(seat)=?", (seat_norm,)).fetchone()
+        if dup:
+            raise HTTPException(status_code=409, detail="Seat already taken")
+        # กันชื่อซ้ำ (ตาม key)
+        dupn = conn.execute("SELECT name_key FROM guests WHERE name_key=?", (name_key,)).fetchone()
+        if dupn:
+            raise HTTPException(status_code=409, detail="Duplicated name")
+        conn.execute(
+            "INSERT INTO guests(name_key, seat, seat_en) VALUES (?,?,?)",
+            (name_key, seat_norm, seat_en)
+        )
+        conn.commit()
+
+    return {"ok": True, "name": name_key, "seat": seat_norm, "seat_en": seat_en}
 
 # -----------------------------
 # Static / Pages

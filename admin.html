@@ -45,7 +45,7 @@
 
           <div class="form-actions">
             <button id="btnAdd" type="button" class="btn-primary">เพิ่มผู้เข้าร่วม</button>
-            <small class="muted">ระบบจะตั้งค่า <code>seat_en</code> เป็น “Table &lt;รหัสที่นั่ง&gt;” อัตโนมัติ</small>
+            <small class="muted">* ระบบจะตั้งค่า <code>seat_en</code> เป็น “Table &lt;รหัสที่นั่ง&gt;” อัตโนมัติ</small>
           </div>
         </div>
       </section>
@@ -122,7 +122,7 @@
       });
       const data = await res.json().catch(()=> ({}));
       if(!res.ok){
-        alert(data.error || 'Request failed');
+        alert(data.detail || data.error || 'Request failed');
         return null;
       }
       return data;
@@ -174,12 +174,14 @@
       const name = nameInput.value.trim();
       if(!name){ alert('กรุณากรอกชื่อ-นามสกุล'); nameInput.focus(); return; }
       const seat = selTable.value + selNo.value;
+
       const ok = await postJSON('/api/admin/guest', {
         name,
         seat,
-        seat_en: `Table ${seat}`  // เซ็ตให้ backend ได้เลย ถ้า backend ตั้งเองอยู่แล้ว ก็ไม่เป็นไร
+        seat_en: `Table ${seat}`
       });
       if(!ok) return;
+
       alert('เพิ่มผู้เข้าร่วมสำเร็จ');
       nameInput.value = '';
       await loadAll();
@@ -187,10 +189,7 @@
 
     /** ---------- keep admin key ---------- */
     const saved = localStorage.getItem('ADMIN_KEY');
-    if(saved) adminKeyInput.value = saved;
-
-    // auto-load ถ้ามีคีย์แล้ว
-    if(saved) loadAll();
+    if(saved) { adminKeyInput.value = saved; loadAll(); }
   </script>
 </body>
 </html>
