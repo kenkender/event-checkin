@@ -174,8 +174,8 @@ footer{
 
   /* แผนผังหน้าแรก (ในการ์ดขวา) ให้พอดีจอมากขึ้น */
   #seating-map{
-    width:92vw !important;
-    max-width:92vw !important;
+    width:80vw !important;
+    max-width:80vw !important;
     min-height:300px !important;
   }
 
