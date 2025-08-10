@@ -174,10 +174,12 @@ footer{
 
   /* แผนผังหน้าแรก (ในการ์ดขวา) ให้พอดีจอมากขึ้น */
   #seating-map{
-    width:80vw !important;
-    max-width:80vw !important;
+    width:90vw !important;       /* เพิ่มความกว้างให้กินพื้นที่มากขึ้น */
+    max-width:90vw !important;   /* กว้างเท่ากับ width */
     min-height:300px !important;
-  }
+    display: block;
+    margin: 0 auto;               /* จัดกึ่งกลางจอ */
+}
 
   /* ซ่อนปุ่มขยายบนมือถือ */
   .zoom-btn{ display:none !important; }
