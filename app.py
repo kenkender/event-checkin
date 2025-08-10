@@ -12,6 +12,7 @@ import sqlite3
 import re
 from contextlib import contextmanager
 from datetime import datetime, timezone, timedelta
+from fastapi import Body
 
 # ----- Timezone: Thailand (+07:00)
 TH_TZ = timezone(timedelta(hours=7))
@@ -49,9 +50,21 @@ def get_conn():
         conn.close()
 
 def init_db():
-    """สร้างตาราง + นำเข้ารายชื่อจาก CSV ครั้งแรก"""
+
     with get_conn() as conn:
-        # checkins log
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS guests (
+                name_key TEXT PRIMARY KEY,
+                seat     TEXT,
+                seat_en  TEXT
+            )
+        """)
+
+        # กัน "ที่นั่ง" ซ้ำ
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_guests_seat ON guests(seat)")
+        # ถ้า table เดิมของคุณไม่ได้ตั้ง name_key เป็น PRIMARY KEY ให้เปิดบรรทัดนี้เพิ่มได้
+        # conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_guests_name ON guests(name_key)")
+
         conn.execute("""
             CREATE TABLE IF NOT EXISTS checkins (
                 id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,14 +76,7 @@ def init_db():
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         """)
-        # master guests
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS guests (
-                name_key TEXT PRIMARY KEY,
-                seat     TEXT,
-                seat_en  TEXT
-            )
-        """)
+
         conn.commit()
 
         # ถ้าตาราง guests ยังว่าง ให้ import จาก CSV
@@ -217,39 +223,52 @@ def api_admin_guests(request: Request):
     return {"items": items}
 
 # === Admin: add/insert guest (JSON body) ===
+from fastapi import Body
+
 @app.post("/api/admin/guest")
-async def api_admin_add_guest_json(request: Request):
+def api_admin_add_guest(
+    request: Request,
+    name: str = Body(...),
+    seat: str = Body(...),
+    seat_en: str = Body(None),
+):
     admin_guard(request)
-    body = await request.json()
-    name = (body.get("name") or "").strip()
-    seat = (body.get("seat") or "").strip()
-    seat_en = (body.get("seat_en") or "").strip()
+    
 
-    if not name:
-        raise HTTPException(status_code=400, detail="Name required")
+    name_key = (name or "").strip().lower()
+    seat     = (seat or "").strip().upper()
+    seat_en  = (seat_en or f"Table {seat}").strip()
 
-    seat_norm = normalize_seat(seat)
-    if not seat_en:
-        seat_en = seat_to_en(seat_norm)
+    # validate ง่ายๆ: รูปแบบโต๊ะ A-L และเบอร์ 1-9 => เช่น A1, B9, L3
+    import re
+    if not re.fullmatch(r"[A-L][1-9]", seat):
+        raise HTTPException(status_code=400, detail="รูปแบบรหัสที่นั่งไม่ถูกต้อง (ควรเป็น A1–L9)")
 
-    name_key = name.lower()
+    if not name_key:
+        raise HTTPException(status_code=400, detail="กรุณากรอกชื่อ")
 
     with get_conn() as conn:
-        # กันที่นั่งซ้ำ
-        dup = conn.execute("SELECT name_key FROM guests WHERE UPPER(seat)=?", (seat_norm,)).fetchone()
-        if dup:
-            raise HTTPException(status_code=409, detail="Seat already taken")
-        # กันชื่อซ้ำ (ตาม key)
-        dupn = conn.execute("SELECT name_key FROM guests WHERE name_key=?", (name_key,)).fetchone()
-        if dupn:
-            raise HTTPException(status_code=409, detail="Duplicated name")
-        conn.execute(
-            "INSERT INTO guests(name_key, seat, seat_en) VALUES (?,?,?)",
-            (name_key, seat_norm, seat_en)
-        )
-        conn.commit()
+        # เช็กชื่อซ้ำ
+        if conn.execute("SELECT 1 FROM guests WHERE name_key=?", (name_key,)).fetchone():
+            raise HTTPException(status_code=409, detail="ชื่อนี้ถูกเพิ่มไว้แล้ว")
 
-    return {"ok": True, "name": name_key, "seat": seat_norm, "seat_en": seat_en}
+        # เช็กที่นั่งซ้ำ
+        if conn.execute("SELECT 1 FROM guests WHERE seat=?", (seat,)).fetchone():
+            raise HTTPException(status_code=409, detail="ที่นั่งนี้มีผู้ใช้งานแล้ว")
+
+        # ผ่านแล้วค่อย insert
+        try:
+            conn.execute(
+                "INSERT INTO guests(name_key, seat, seat_en) VALUES (?,?,?)",
+                (name_key, seat, seat_en),
+            )
+            conn.commit()
+        except sqlite3.IntegrityError as e:
+            # กันกรณีชน unique index เผื่อมี race condition
+            msg = "ข้อมูลซ้ำ" if "UNIQUE" in str(e).upper() else "บันทึกไม่สำเร็จ"
+            raise HTTPException(status_code=409, detail=msg)
+
+    return {"ok": True}
 
 # -----------------------------
 # Static / Pages
