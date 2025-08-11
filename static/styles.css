@@ -174,15 +174,19 @@ footer{
   #result{ font-size:1.0rem; }
 
   /* แผนผังหน้าแรก (ในการ์ดขวา) ให้พอดีจอมากขึ้น */
- @media (max-width: 768px){
-  #seating-map{
-    width:100% !important;
-    max-width:100% !important;
-    height:auto !important;
-    min-height:300px !important; /* ปรับได้ */
-    display:block;
-    margin:0 auto;
+ @media (max-width: 768px) {
+  #seating-map {
+    width: 85% !important;        /* ลดจาก 100% ให้เล็กลง */
+    max-width: 360px !important;  /* จำกัดความกว้างสูงสุด */
+    height: auto !important;
+    display: block;
+    margin: 0 auto;               /* จัดกึ่งกลาง */
   }
+
+  .right-panel {
+    text-align: center;           /* ทำให้เนื้อหาข้างในอยู่กลาง */
+  }
+}
   /* ซ่อนปุ่มขยายบนมือถือ */
   .zoom-btn{ display:none !important; }
 
@@ -190,10 +194,10 @@ footer{
   .modal-bg{ align-items:flex-start; justify-content:center; padding-top:8vh; }
   .modal-content{ width:94vw; max-width:94vw; max-height:70vh; }
   #seating-map-modal{ width:100% !important; height:auto !important; display:block; margin:0 auto; }
-}
 
 
 
+  
 
 /* ========================================================================== */
 /* Welcome Modal                                                               */
