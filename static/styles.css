@@ -441,23 +441,43 @@ footer{
 .form-actions{ display:flex; align-items:center; gap:12px; }
 
 /* === Admin Add Guest: shrink & center the three fields === */
-#selTable,
-#selNo,
-#seatPreview{
-  width: 220px;           /* ขนาดช่องให้เล็กลง */
-  max-width: 90%;
-  padding: 10px 12px;     /* ลด padding */
-  font-size: 0.95rem;
-  border-radius: 10px;
+
+.form-row.cols-3 label { text-align: center; }
+
+#selTable, #selNo, #seatPreview {
   display: block;
-  margin: 0 auto;         /* จัดให้อยู่กึ่งกลางการ์ด */
+  margin: center;         /* จัดให้อยู่กึ่งกลางคอลัมน์ */
+  padding: 8px 10px;      /* ลดความสูง */
+  font-size: 14px;        /* ลดฟอนต์ */
+  border-radius: 10px;
+  text-align: center;
+  box-sizing: border-box;
+  width: 80%;
+}
+#seatPreview {
+  position: relative;  /* ให้ขยับได้อิสระ */
+  margin-left: 1px;   /* ขยับไปทางขวา 20px */
 }
 
-/* จัดข้อความของ select ให้อยู่กลาง */
-#selTable,
-#selNo{
-  text-align-last: center;
+/* กำหนด “ความกว้างรายช่อง” แบบแยกส่วน */
+#selTable      { width: 56%; }   /* โต๊ะ (A–L) */
+#selNo         { width: 56%; }   /* เลขที่นั่ง (1–9) */
+#seatPreview   { width: 70%; }   /* รหัสที่นั่ง (A1) */
+
+/* มือถือ – ให้เล็กลงอีกนิด */
+@media (max-width: 768px) {
+  #selTable    { width: 60%; font-size: 13.5px; padding: 6px 8px; }
+  #selNo       { width: 48%; font-size: 13.5px; padding: 6px 8px; }
+  #seatPreview { width: 64%; font-size: 13.5px; padding: 6px 8px; }
 }
+
+/* เดสก์ท็อป – ถ้าอยากให้กระชับกว่านี้ */
+@media (min-width: 1024px) {
+  #selTable    { width: 40%; }
+  #selNo       { width: 40%; }
+  #seatPreview { width: 40%; }
+}
+
 
 /* มือถือ: ให้เล็กลงอีกนิด */
 @media (max-width: 768px){
