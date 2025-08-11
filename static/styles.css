@@ -131,6 +131,7 @@ footer{
 @media (max-width:768px){
   /* ย่อสเกลเบื้องต้นของทั้งหน้า */
   html{ font-size:13.6px; }
+}
 
   /* จัดเลย์เอาต์ให้โปร่ง ย่อ padding */
   .main-container{
@@ -173,14 +174,15 @@ footer{
   #result{ font-size:1.0rem; }
 
   /* แผนผังหน้าแรก (ในการ์ดขวา) ให้พอดีจอมากขึ้น */
+ @media (max-width: 768px){
   #seating-map{
-    width:90vw !important;       /* เพิ่มความกว้างให้กินพื้นที่มากขึ้น */
-    max-width:90vw !important;   /* กว้างเท่ากับ width */
-    min-height:300px !important;
-    display: block;
-    margin: 0 auto;               /* จัดกึ่งกลางจอ */
-}
-
+    width:100% !important;
+    max-width:100% !important;
+    height:auto !important;
+    min-height:300px !important; /* ปรับได้ */
+    display:block;
+    margin:0 auto;
+  }
   /* ซ่อนปุ่มขยายบนมือถือ */
   .zoom-btn{ display:none !important; }
 
