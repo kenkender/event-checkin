@@ -116,7 +116,7 @@ def load_guests():
             result[r["name_key"]] = {
                 "seat": r["seat"],
                 "seat_en": r["seat_en"],
-                "display_name": r.get("display_name") or r["name_key"]
+                "display_name": r.get["full_name"],               # <-- เพิ่มบรรทัดนี้
             }
     if result:
         return result
