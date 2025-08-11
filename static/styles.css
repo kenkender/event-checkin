@@ -200,7 +200,7 @@ footer{
     margin: 0 auto;
   }
 
-  
+
   /* ซ่อนปุ่มขยาย */
   .zoom-btn { display: none !important; }
 
@@ -440,6 +440,35 @@ footer{
 .form-row input, .form-row select{ width:90%; padding:14px 18px; border-radius:10px; border:none; background:#f7f8fa;}
 .form-actions{ display:flex; align-items:center; gap:12px; }
 
+/* === Admin Add Guest: shrink & center the three fields === */
+#selTable,
+#selNo,
+#seatPreview{
+  width: 220px;           /* ขนาดช่องให้เล็กลง */
+  max-width: 90%;
+  padding: 10px 12px;     /* ลด padding */
+  font-size: 0.95rem;
+  border-radius: 10px;
+  display: block;
+  margin: 0 auto;         /* จัดให้อยู่กึ่งกลางการ์ด */
+}
+
+/* จัดข้อความของ select ให้อยู่กลาง */
+#selTable,
+#selNo{
+  text-align-last: center;
+}
+
+/* มือถือ: ให้เล็กลงอีกนิด */
+@media (max-width: 768px){
+  #selTable,
+  #selNo,
+  #seatPreview{
+    width: 200px;
+    font-size: 0.93rem;
+    padding: 9px 10px;
+  }
+}
 
 @media (max-width: 900px){
   #selTable, #selNo, #seatPreview{
