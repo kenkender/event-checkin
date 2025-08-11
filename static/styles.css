@@ -125,79 +125,76 @@ footer{
   left:0; bottom:0; z-index:9; border-top:1.5px solid #ffe95733; }
 .footer-text{ display:block; text-align:center; margin:0 auto; }
 
+
 /* ========================================================================== */
 /* Mobile                                                                     */
 /* ========================================================================== */
-@media (max-width:768px){
-  /* ย่อสเกลเบื้องต้นของทั้งหน้า */
-  html{ font-size:13.6px; }
-}
+@media (max-width: 768px){
 
-  /* จัดเลย์เอาต์ให้โปร่ง ย่อ padding */
+  /* ย่อสเกลรวม ๆ */
+  html{ font-size: 13.6px; }
+
+  /* จัดเลย์เอาต์ */
   .main-container{
-    flex-direction:column;
-    gap:8px;
-    padding:10px 8px 28px;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 8px 28px;
   }
 
-  /* ย่อขนาดการ์ดซ้าย/ขวาให้เล็กลงและไม่กินขอบจอ */
+  /* การ์ดซ้าย/ขวาให้พอดีจอ */
   .left-panel,
   .right-panel{
-    width:92vw;
-    max-width:92vw;
-    padding:10px 10px 10px;
-    border-radius:14px;
-    margin:0 auto;           /* จัดให้กลาง */
+    width: 92vw !important;
+    max-width: 92vw !important;
+    min-width: 0 !important;       /* ← บังคับตัด min-width เดิม */
+    padding: 10px 10px 10px;
+    border-radius: 14px;
+    margin: 0 auto;
+    text-align: center;
   }
 
-  /* ย่อโลโก้เมื่ออยู่บนมือถือ */
-  .logo{ width:76px; }
+  /* ฟอร์ม */
+  .input-container{ margin-bottom: 10px; }
+  input[type="text"]{
+    font-size: 0.98rem;
+    padding: 9px 10px;
+    width: 88%;
+    border-radius: 10px;
+    margin-left: auto; margin-right: auto; display: block;
+  }
+  .checkin-btn{
+    font-size: 1rem; padding: 10px 0; width: 90%;
+    margin-left: auto; margin-right: auto; border-radius: 12px;
+  }
+  #result{ font-size: 1rem; }
 
-  /* ย่อหัวเรื่องหลัก */
-  .main-title{ font-size:1.18rem; }
-
-  /* จัดหัวข้อแผนผังให้อยู่กลางจริง ๆ */
+  /* หัวข้อแผนผังให้อยู่กลาง */
   .seating-title{
-    display:flex !important;
-    justify-content:center !important;
-    align-items:center !important;
-    width:100%;
-    text-align:center !important;
-    gap:8px;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%; text-align: center !important; gap: 8px;
   }
-  .seating-title > span{ margin:0 auto !important; }
+  .seating-title > span{ margin: 0 auto !important; }
 
-  /* ฟอร์มและปุ่มให้กะทัดรัด */
-  .input-container{ margin-bottom:10px; }
-  input[type="text"]{ font-size:0.98rem; padding:9px 10px; width: 85%; border-radius:10px; margin-left: 15px; margin-right: 10px; }
-  .checkin-btn{ font-size:1.0rem; padding:10px 0; width: 90%; margin-left: auto; margin-right: auto; border-radius:12px; }
-  #result{ font-size:1.0rem; }
-
-  /* แผนผังหน้าแรก (ในการ์ดขวา) ให้พอดีจอมากขึ้น */
- @media (max-width: 768px) {
-  #seating-map {
-    width: 85% !important;        /* ลดจาก 100% ให้เล็กลง */
-    max-width: 360px !important;  /* จำกัดความกว้างสูงสุด */
-    height: auto !important;
-    display: block;
-    margin: 0 auto;               /* จัดกึ่งกลาง */
+  /* แผนผังให้พอดีการ์ด */
+  #seating-map{
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 300px !important;
+    display: block; margin: 0 auto;
   }
 
-  .right-panel {
-    text-align: center;           /* ทำให้เนื้อหาข้างในอยู่กลาง */
-  }
+
+  /* ซ่อนปุ่มขยาย */
+  .zoom-btn{ display: none !important; }
+
+  /* โมดัล */
+  .modal-bg{ align-items: flex-start; justify-content: center; padding-top: 8vh; }
+  .modal-content{ width: 94vw; max-width: 94vw; max-height: 70vh; }
+  #seating-map-modal{ width: 100% !important; height: auto !important; display: block; margin: 0 auto; }
 }
-  /* ซ่อนปุ่มขยายบนมือถือ */
-  .zoom-btn{ display:none !important; }
 
-  /* โมดัลบนมือถือให้ล้นน้อยลง */
-  .modal-bg{ align-items:flex-start; justify-content:center; padding-top:8vh; }
-  .modal-content{ width:94vw; max-width:94vw; max-height:70vh; }
-  #seating-map-modal{ width:100% !important; height:auto !important; display:block; margin:0 auto; }
-
-
-
-  
 
 /* ========================================================================== */
 /* Welcome Modal                                                               */
