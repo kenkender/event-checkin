@@ -116,7 +116,7 @@ def load_guests():
             result[r["name_key"]] = {
                 "seat": r["seat"],
                 "seat_en": r["seat_en"],
-                "display_name": r.get["full_name"],               # <-- เพิ่มบรรทัดนี้
+                "display_name": r.get("display_name") or r["name_key"]
             }
     if result:
         return result
@@ -205,14 +205,16 @@ async def checkin(request: Request, name: str = Form(...)):
 
     seat = found["seat"]
     seat_en = found["seat_en"]
+    # ใช้ชื่อเต็มจากฐาน (ถ้าไม่มี ให้ fallback เป็น matched_key หรือ name_raw)
+    canonical_name = (found.get("display_name") or matched_key or name_raw).strip()
 
     # ตรวจว่าเคยเช็คอินแล้วหรือยัง (ถือว่า 'เคย' ถ้ามีชื่อ+ที่นั่งนี้อย่างน้อย 1 แถว)
     # ปล. ถ้าคุณต้องการให้เทียบด้วย "ชื่อเต็มตามฐาน" ให้เปลี่ยน name_raw เป็น matched_key หรือชื่อ canonical ที่คุณเก็บไว้
-    already = False
+
     with get_conn() as conn:
         row = conn.execute(
             "SELECT 1 AS ok FROM checkins WHERE name=? AND seat=? LIMIT 1",
-            (name_raw, seat),
+            (canonical_name, seat),
         ).fetchone()
         already = bool(row)
 
@@ -220,9 +222,10 @@ async def checkin(request: Request, name: str = Form(...)):
         conn.execute(
             "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) "
             "VALUES (?,?,?,?,?,?)",
-            (name_raw, seat, seat_en, ua, ip, now_th),
+            (canonical_name, seat, seat_en, ua, ip, now_th),
         )
         conn.commit()
+
 
     return {"success": True, "seat": seat, "seat_en": seat_en, "already": already}
 
