@@ -172,39 +172,35 @@ def seat_to_en(s: str) -> str:
 @app.post("/checkin")
 async def checkin(request: Request, name: str = Form(...)):
     guests = load_guests()
-    q = name.strip().lower()
+    name_raw = (name or "").strip()
+    name_key = name_raw.lower()
 
-
+    # หาในรายชื่อ (ยอมรับพิมพ์แค่บางส่วน)
+    found = None
     matched_key = None
-    # exact match
-    if q in guests:
-        matched_key = q
-    else:
-        # contains match
-        candidates = [k for k in guests if q in k]
-        if candidates:
-            matched_key = sorted(candidates, key=lambda k: (k.find(q), -len(k)))[0]
+    for gk, gv in guests.items():
+        if name_key in gk:
+            found = gv
+            matched_key = gk
+            break
 
-    if matched_key:
-        g = guests[matched_key]
-        full_name = g.get("display_name", matched_key)  # <-- ใช้ display_name
+    # context สำหรับ log
+    ua = request.headers.get("user-agent", "-")
+    ip = request.client.host if request.client else "-"
+    now_th = datetime.now(TH_TZ).strftime("%Y-%m-%d %H:%M:%S")
 
-        ip = request.client.host if request and request.client else "-"
-        ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        # บันทึก log ด้วยชื่อเต็ม
-        with open("checkin_logs.csv", "a", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow([full_name, g["seat"], ip, ts])
-
-        return {
-            "success": True,
-            "name": full_name,       # ส่งชื่อเต็มกลับไปแสดง
-            "seat": g["seat"],
-            "seat_en": g["seat_en"]
-        }
-
-    return {"success": False, "error": "ไม่พบชื่อในระบบ / Name not found."}
+    # ถ้าไม่พบชื่อใน master
+    if not found:
+        # log ความพยายามที่ไม่พบชื่อไว้เหมือนเดิม
+        with get_conn() as conn:
+            
+            conn.execute(
+                "INSERT INTO checkins (name, seat, seat_en, user_agent, ip, created_at) "
+                "VALUES (?,?,?,?,?,?)",
+                (name_raw, None, None, ua, ip, now_th),
+            )
+            conn.commit()
+        return {"success": False, "error": "ไม่พบชื่อในระบบ / Name not found."}
 
 
     seat = found["seat"]
