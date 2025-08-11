@@ -127,72 +127,100 @@ footer{
 
 
 /* ========================================================================== */
-/* Mobile                                                                     */
+/* Mobile: ปรับ UI ให้เล็กลงและพอดีทุกจอ                                     */
 /* ========================================================================== */
 @media (max-width: 768px){
 
-  /* ย่อสเกลรวม ๆ */
-  html{ font-size: 13.6px; }
+  /* ย่อสเกลทั้งหน้า */
+  html {
+    font-size: 12.4px; /* เดิม 13.6px */
+  }
 
-  /* จัดเลย์เอาต์ */
-  .main-container{
+  /* จัดเลย์เอาต์แนวตั้ง */
+  .main-container {
     flex-direction: column;
     gap: 8px;
     padding: 10px 8px 28px;
   }
 
-  /* การ์ดซ้าย/ขวาให้พอดีจอ */
+  /* การ์ดซ้าย/ขวา */
   .left-panel,
-  .right-panel{
-    width: 92vw !important;
-    max-width: 92vw !important;
-    min-width: 0 !important;       /* ← บังคับตัด min-width เดิม */
-    padding: 10px 10px 10px;
+  .right-panel {
+    width: 90vw !important;      /* ลดจาก 92vw */
+    max-width: 90vw !important;
+    min-width: 0 !important;
+    padding: 10px;
     border-radius: 14px;
     margin: 0 auto;
     text-align: center;
   }
 
-  /* ฟอร์ม */
-  .input-container{ margin-bottom: 10px; }
-  input[type="text"]{
-    font-size: 0.98rem;
-    padding: 9px 10px;
-    width: 88%;
-    border-radius: 10px;
-    margin-left: auto; margin-right: auto; display: block;
+  /* โลโก้ */
+  .logo-container img {
+    max-width: 120px; /* ย่อโลโก้ */
+    height: auto;
   }
-  .checkin-btn{
-    font-size: 1rem; padding: 10px 0; width: 90%;
-    margin-left: auto; margin-right: auto; border-radius: 12px;
-  }
-  #result{ font-size: 1rem; }
 
-  /* หัวข้อแผนผังให้อยู่กลาง */
-  .seating-title{
+  /* ฟอร์ม */
+  .input-container { margin-bottom: 10px; }
+  input[type="text"] {
+    font-size: 0.95rem;
+    padding: 8px 10px;
+    width: 85%;
+    border-radius: 10px;
+    margin: 0 auto;
+    display: block;
+  }
+  .checkin-btn {
+    font-size: 0.95rem;
+    padding: 9px 0;
+    width: 85%;
+    margin: 0 auto;
+    border-radius: 12px;
+  }
+  #result { font-size: 0.95rem; }
+
+  /* หัวข้อแผนผัง */
+  .seating-title {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    width: 100%; text-align: center !important; gap: 8px;
+    width: 100%;
+    text-align: center !important;
+    gap: 8px;
   }
-  .seating-title > span{ margin: 0 auto !important; }
+  .seating-title > span { margin: 0 auto !important; }
 
-  /* แผนผังให้พอดีการ์ด */
-  #seating-map{
+  /* แผนผัง */
+  #seating-map {
     width: 100% !important;
-    max-width: 100% !important;
-    min-height: 300px !important;
-    display: block; margin: 0 auto;
+    max-width: 320px !important; /* จำกัดไม่ให้ใหญ่เกิน */
+    min-height: 260px !important;
+    display: block;
+    margin: 0 auto;
   }
 
-
+  
   /* ซ่อนปุ่มขยาย */
-  .zoom-btn{ display: none !important; }
+  .zoom-btn { display: none !important; }
 
-  /* โมดัล */
-  .modal-bg{ align-items: flex-start; justify-content: center; padding-top: 8vh; }
-  .modal-content{ width: 94vw; max-width: 94vw; max-height: 70vh; }
-  #seating-map-modal{ width: 100% !important; height: auto !important; display: block; margin: 0 auto; }
+  /* โมดัล (ขยายแผนผัง) */
+  .modal-bg {
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 6vh;
+  }
+  .modal-content {
+    width: 94vw;
+    max-width: 94vw;
+    max-height: 70vh;
+  }
+  #seating-map-modal {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
+  }
 }
 
 
