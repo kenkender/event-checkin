@@ -13,6 +13,43 @@ function addPulseEffect(el){
 /* -------------------------------------------------------
    SVG Highlight helpers
 ------------------------------------------------------- */
+function ensureHighlightStyles(svgDoc){
+  if(!svgDoc) return;
+  if(svgDoc.getElementById('seatHighlightStyles')) return;
+  const style = svgDoc.createElementNS('http://www.w3.org/2000/svg','style');
+  style.id = 'seatHighlightStyles';
+  style.textContent = `
+    @keyframes seat-blink{
+      0%{stroke:#b2c0ff; filter:drop-shadow(0 0 16px #579aff);}
+      40%{stroke:#ff5b5b; filter:drop-shadow(0 0 32px #e32c2c);}
+      60%{stroke:#5792ff; filter:drop-shadow(0 0 42px #5784ff);}
+      80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #ff5757);}
+      100%{stroke:#144bfd; filter:drop-shadow(0 0 16px #5776ff);}
+    }
+    .seat-highlight{
+      stroke:#fd5959 !important;
+      stroke-width:7px !important;
+      filter:drop-shadow(0 0 22px #577eff);
+      animation:seat-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
+    }
+    @keyframes seat-fill-blink{
+      0%{fill:#3078ff; filter:drop-shadow(0 0 18px #ffe957);}
+      40%{fill:#e32c2c; filter:drop-shadow(0 0 36px #e32c2c);}
+      60%{fill:#5776ff; filter:drop-shadow(0 0 46px #ffe957);}
+      80%{fill:#ff5d57; filter:drop-shadow(0 0 24px #ffe957);}
+      100%{fill:#578cff; filter:drop-shadow(0 0 16px #ffe957);}
+    }
+    rect.seat-bg-highlight,
+    circle.seat-bg-highlight,
+    ellipse.seat-bg-highlight,
+    path.seat-bg-highlight,
+    polygon.seat-bg-highlight{
+      fill:#ff95e8 !important;
+      animation:seat-fill-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
+    }
+  `;
+  svgDoc.documentElement.appendChild(style);
+}
 function clearHighlightsInDoc(svgDoc){
   if(!svgDoc) return;
   svgDoc.querySelectorAll('.seat-highlight').forEach(el=>el.classList.remove('seat-highlight'));
@@ -20,21 +57,30 @@ function clearHighlightsInDoc(svgDoc){
 }
 function applyHighlightInDoc(svgDoc, seatId){
   if(!svgDoc || !seatId) return;
+  ensureHighlightStyles(svgDoc);
   const seat = svgDoc.getElementById(seatId);
   if(!seat) return;
 
   // กรณีเป็นกลุ่ม (<g>) ให้เลือกชิ้นส่วนที่เป็นสี่เหลี่ยมหรือวงกลมภายใน
   // เพื่อให้เอฟเฟกต์เส้นและพื้นหลังทำงานได้ถูกต้อง
-  const target = seat.tagName === 'g'
-    ? seat.querySelector('rect, circle') || seat
-    : seat;
-
-  // รีเซ็ตคลาสเอฟเฟกต์ก่อนเพื่อให้แอนิเมชันเล่นซ้ำได้
-  target.classList.remove('seat-highlight', 'seat-bg-highlight');
-  void target.offsetWidth;
-
-  // เพิ่มคลาสเอฟเฟกต์ทั้งเส้นและพื้นหลัง
-  target.classList.add('seat-highlight', 'seat-bg-highlight');
+  // ไว้ทั้งกลุ่มและชิ้นส่วนภายใน เพื่อรองรับโครงสร้าง SVG ที่หลากหลาย
+  const elements = [];
+  if(seat.tagName.toLowerCase() === 'g'){
+    elements.push(seat);
+    const shape = seat.querySelector('rect, circle, ellipse, path, polygon');
+    if(shape) elements.push(shape);
+  }else{
+    elements.push(seat);
+  }
+  
+   elements.forEach(el=>{
+    el.classList.remove('seat-highlight', 'seat-bg-highlight');
+    void el.offsetWidth;
+    el.classList.add('seat-highlight');
+    if(/rect|circle|ellipse|path|polygon/i.test(el.tagName)){
+      el.classList.add('seat-bg-highlight');
+    }
+    });
 }
 
 /* ให้มีไฮไลต์ได้ทีละที่เดียว */
@@ -47,19 +93,29 @@ function highlightSeat(seatId){
   if(objMain && objMain.contentDocument)  clearHighlightsInDoc(objMain.contentDocument);
   if(objModal && objModal.contentDocument) clearHighlightsInDoc(objModal.contentDocument);
 
-  if(objMain){
-    const apply = () => {
-      if(objMain.contentDocument && seatId){
-        applyHighlightInDoc(objMain.contentDocument, seatId);
+  const applyTo = (obj) => {
+    if(!obj) return;
+    const run = () => {
+      if(obj.contentDocument && seatId){
+        applyHighlightInDoc(obj.contentDocument, seatId);
       }
     };
+    if(obj.contentDocument){
+      run();
+    }else if(seatId){
+      obj.addEventListener('load', run, { once:true });
+    }
+  };
+
+  applyTo(objMain);
+  applyTo(objModal);
     if(objMain.contentDocument){
       apply();
     }else if(seatId){
       objMain.addEventListener('load', apply, { once:true });
     }
   }
-}
+  
 
 /* ซิงก์ไป modal เมื่อเปิด */
 function syncHighlightToModal(){
