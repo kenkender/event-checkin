@@ -13,6 +13,7 @@ import re
 from contextlib import contextmanager
 from datetime import datetime, timezone, timedelta
 from fastapi import Body
+from fastapi import Response
 
 # ----- Timezone: Thailand (+07:00)
 TH_TZ = timezone(timedelta(hours=7))
@@ -371,6 +372,10 @@ def main_page():
 @app.get("/admin")
 def admin_page():
     return FileResponse("admin.html")
+
+@app.api_route("/ping", methods=["GET", "HEAD"])
+def ping():
+    return Response(content="OK", media_type="text/plain")
 
 @app.get("/health")
 def health():
