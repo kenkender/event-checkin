@@ -157,7 +157,7 @@ async function checkIn(){
     // ถ้าเช็คอินซ้ำ => เปิด modal แจ้งเตือน
     if (data.already) {
       openDupModal(`
-        <div style="margin-bottom:8px;">คุณได้เช็คอินเรียบร้อยแล้ว</div>
+        <div style="margin-bottom:8px; font-size:1.3em;">คุณได้เช็คอินเรียบร้อยแล้ว</div>
         <div style="font-weight:700; margin-bottom:6px;">
           ที่นั่งของคุณคือ <span style="color:#e32c2c">${data.seat}</span>
         </div>
