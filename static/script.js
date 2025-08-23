@@ -158,7 +158,7 @@ async function checkIn(){
     if (data.already) {
       openDupModal(`
         <div style="margin-bottom:8px; font-size:2em;">คุณได้เช็คอินเรียบร้อยแล้ว</div>
-        <div style="font-weight:700; margin-bottom:6px;">
+        <div style="font-weight:700; margin-bottom:6px; font-size:1.6em;">
           ที่นั่งของคุณคือ <span style="color:#e32c2c">${data.seat}</span>
         </div>
         <div style="opacity:.9">You have already checked in.<br>Your seat is <b>${data.seat_en || data.seat}</b>.</div>
