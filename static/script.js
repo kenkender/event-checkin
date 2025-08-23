@@ -161,7 +161,7 @@ async function checkIn(){
         <div style="font-weight:700; margin-bottom:6px; font-size:1.6em;">
           ที่นั่งของคุณคือ <span style="color:#e32c2c">${data.seat}</span>
         </div>
-        <div style="opacity:.9">You have already checked in.<br>Your seat is <b>${data.seat_en || data.seat}</b>.</div>
+        <div style="opacity:.9; font-size:1.6em;">You have already checked in.<br>Your seat is <b>${data.seat_en || data.seat}</b>.</div>
       `);
     }
   }else{
