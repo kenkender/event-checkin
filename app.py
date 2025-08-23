@@ -21,7 +21,8 @@ TH_TZ = timezone(timedelta(hours=7))
 # Environment
 # -----------------------------
 ADMIN_KEY = os.getenv("ADMIN_KEY")              # ตั้งค่าใน Render/เครื่องคุณ เช่น tpbadmin2025
-DB_PATH   = os.getenv("CHECKIN_DB", "checkins.db")
+DB_PATH   = os.getenv("CHECKIN_DB", "/tmp/checkins.db")
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 # -----------------------------
 # FastAPI app & CORS
