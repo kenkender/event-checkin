@@ -23,20 +23,18 @@ function applyHighlightInDoc(svgDoc, seatId){
   const seat = svgDoc.getElementById(seatId);
   if(!seat) return;
 
-  seat.classList.add('seat-highlight');
+  // กรณีเป็นกลุ่ม (<g>) ให้เลือกชิ้นส่วนที่เป็นสี่เหลี่ยมหรือวงกลมภายใน
+  // เพื่อให้เอฟเฟกต์เส้นและพื้นหลังทำงานได้ถูกต้อง
+  const target = seat.tagName === 'g'
+    ? seat.querySelector('rect, circle') || seat
+    : seat;
 
-  if(seat.tagName === 'g'){
-    const bg = seat.querySelector('rect, circle');
-    if(bg){
-      bg.classList.remove('seat-bg-highlight');
-      void bg.offsetWidth;
-      bg.classList.add('seat-bg-highlight');
-    }
-  }else if(seat.tagName === 'rect' || seat.tagName === 'circle'){
-    seat.classList.remove('seat-bg-highlight');
-    void seat.offsetWidth;
-    seat.classList.add('seat-bg-highlight');
-  }
+  // รีเซ็ตคลาสเอฟเฟกต์ก่อนเพื่อให้แอนิเมชันเล่นซ้ำได้
+  target.classList.remove('seat-highlight', 'seat-bg-highlight');
+  void target.offsetWidth;
+
+  // เพิ่มคลาสเอฟเฟกต์ทั้งเส้นและพื้นหลัง
+  target.classList.add('seat-highlight', 'seat-bg-highlight');
 }
 
 /* ให้มีไฮไลต์ได้ทีละที่เดียว */
@@ -49,8 +47,17 @@ function highlightSeat(seatId){
   if(objMain && objMain.contentDocument)  clearHighlightsInDoc(objMain.contentDocument);
   if(objModal && objModal.contentDocument) clearHighlightsInDoc(objModal.contentDocument);
 
-  if(objMain && objMain.contentDocument && seatId){
-    applyHighlightInDoc(objMain.contentDocument, seatId);
+  if(objMain){
+    const apply = () => {
+      if(objMain.contentDocument && seatId){
+        applyHighlightInDoc(objMain.contentDocument, seatId);
+      }
+    };
+    if(objMain.contentDocument){
+      apply();
+    }else if(seatId){
+      objMain.addEventListener('load', apply, { once:true });
+    }
   }
 }
 
