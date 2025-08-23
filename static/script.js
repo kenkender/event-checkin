@@ -109,13 +109,8 @@ function highlightSeat(seatId){
 
   applyTo(objMain);
   applyTo(objModal);
-    if(objMain.contentDocument){
-      apply();
-    }else if(seatId){
-      objMain.addEventListener('load', apply, { once:true });
-    }
-  }
-  
+}
+
 
 /* ซิงก์ไป modal เมื่อเปิด */
 function syncHighlightToModal(){

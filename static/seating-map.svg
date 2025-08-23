@@ -26,7 +26,7 @@ circle.seat-bg-highlight,
 ellipse.seat-bg-highlight,
 path.seat-bg-highlight,
 polygon.seat-bg-highlight {
-  fill:#ff95e8 !important;
+  fill:#FFFFFF !important;
   animation:seat-fill-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
 }
 </style>
