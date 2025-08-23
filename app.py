@@ -252,7 +252,12 @@ def api_admin_guests(request: Request):
     admin_guard(request)
     guests = load_guests()
     items = [
-        {"name": v.get("display_name") or k, "seat": v["seat"], "seat_en": v["seat_en"]}
+        {
+            "name": v.get("display_name") or k,
+            "seat": v["seat"],
+            "seat_en": v["seat_en"],
+            "key": k,
+        }
         for k, v in guests.items()
     ]
     items.sort(key=lambda x: (x["seat"], x["name"]))
@@ -301,6 +306,58 @@ def api_admin_add_guest(
         conn.commit()
 
     return {"ok": True}
+
+@app.put("/api/admin/guest/{name_key}")
+def api_admin_update_guest(
+    request: Request,
+    name_key: str,
+    name: str = Body(...),
+    seat: str = Body(...),
+    seat_en: str = Body(None),
+):
+    admin_guard(request)
+
+    display_name = (name or "").strip()
+    new_key = display_name.lower()
+    seat = normalize_seat(seat)
+    seat_en = (seat_en or seat_to_en(seat)).strip()
+
+    if not new_key:
+        raise HTTPException(status_code=400, detail="name is required")
+
+    with get_conn() as conn:
+        if not conn.execute("SELECT 1 FROM guests WHERE name_key=?", (name_key,)).fetchone():
+            raise HTTPException(status_code=404, detail="guest not found")
+
+        if conn.execute(
+            "SELECT 1 FROM guests WHERE seat=? AND name_key<>?",
+            (seat, name_key),
+        ).fetchone():
+            raise HTTPException(status_code=409, detail="ที่นั่งนี้มีผู้ใช้งานแล้ว")
+
+        if new_key != name_key and conn.execute(
+            "SELECT 1 FROM guests WHERE name_key=?",
+            (new_key,),
+        ).fetchone():
+            raise HTTPException(status_code=409, detail="ชื่อนี้ถูกใช้แล้ว")
+
+        conn.execute(
+            "UPDATE guests SET name_key=?, display_name=?, seat=?, seat_en=? WHERE name_key=?",
+            (new_key, display_name, seat, seat_en, name_key),
+        )
+        conn.commit()
+
+    return {"ok": True}
+
+
+@app.delete("/api/admin/guest/{name_key}")
+def api_admin_delete_guest(request: Request, name_key: str):
+    admin_guard(request)
+    with get_conn() as conn:
+        conn.execute("DELETE FROM guests WHERE name_key=?", (name_key,))
+        conn.commit()
+    return {"ok": True}
+
 
 # -----------------------------
 # Static / Pages

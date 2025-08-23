@@ -97,6 +97,7 @@
     const selNo    = $('#selNo');
     const seatPreview = $('#seatPreview');
     const nameInput   = $('#newName');
+    const tblGuests   = $('#tblGuests');
 
     function getKey(){
       return adminKeyInput.value || localStorage.getItem('ADMIN_KEY') || '';
@@ -117,6 +118,37 @@
         method: 'POST',
         headers: { 'Content-Type':'application/json', 'X-Admin-Key': key },
         body: JSON.stringify(body)
+      });
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok){
+        alert(data.error || 'Request failed');
+        return null;
+      }
+      return data;
+    }
+
+    async function putJSON(url, body){
+      const key = getKey();
+      if(!key){ alert('กรอก Admin Key ก่อน'); return null; }
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type':'application/json', 'X-Admin-Key': key },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json().catch(()=> ({}));
+      if(!res.ok){
+        alert(data.error || 'Request failed');
+        return null;
+      }
+      return data;
+    }
+
+    async function deleteJSON(url){
+      const key = getKey();
+      if(!key){ alert('กรอก Admin Key ก่อน'); return null; }
+      const res = await fetch(url, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Key': key }
       });
       const data = await res.json().catch(()=> ({}));
       if(!res.ok){
@@ -161,6 +193,10 @@
         <tr>
           <td>${g.name}</td>
           <td>${g.seat}</td>
+          <td>
+            <button class="btnEdit" data-key="${g.key}" data-name="${g.name}" data-seat="${g.seat}">แก้ไข</button>
+            <button class="btnDel" data-key="${g.key}">ลบ</button>
+          </td>
         </tr>`).join('');
     }
     btnLoad.addEventListener('click', loadAll);
@@ -181,6 +217,30 @@
       alert('เพิ่มผู้เข้าร่วมสำเร็จ');
       nameInput.value = '';
       await loadAll();
+    });
+
+    tblGuests.addEventListener('click', async (ev)=>{
+      const el = ev.target;
+      if(el.classList.contains('btnEdit')){
+        const key = el.dataset.key;
+        const oldName = el.dataset.name;
+        const oldSeat = el.dataset.seat;
+        const newName = prompt('แก้ไขชื่อ', oldName);
+        if(!newName) return;
+        const newSeat = prompt('แก้ไขที่นั่ง (เช่น A1)', oldSeat);
+        if(!newSeat) return;
+        const ok = await putJSON(`/api/admin/guest/${encodeURIComponent(key)}`, {
+          name: newName,
+          seat: newSeat,
+          seat_en: `Table ${newSeat}`
+        });
+        if(ok) await loadAll();
+      } else if(el.classList.contains('btnDel')){
+        const key = el.dataset.key;
+        if(!confirm('ลบรายชื่อนี้?')) return;
+        const ok = await deleteJSON(`/api/admin/guest/${encodeURIComponent(key)}`);
+        if(ok) await loadAll();
+      }
     });
 
     /* ---------- keep key & auto-load ---------- */
