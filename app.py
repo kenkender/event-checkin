@@ -14,6 +14,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone, timedelta
 from fastapi import Body
 from fastapi import Response
+from pathlib import Path
 
 # ----- Timezone: Thailand (+07:00)
 TH_TZ = timezone(timedelta(hours=7))
@@ -21,11 +22,11 @@ TH_TZ = timezone(timedelta(hours=7))
 # -----------------------------
 # Environment
 # -----------------------------
-ADMIN_KEY = os.getenv("ADMIN_KEY")              # ตั้งค่าใน Render/เครื่องคุณ เช่น tpbadmin2025
-DB_PATH   = os.getenv("CHECKIN_DB", "data/checkin.db")
-db_dir = os.path.dirname(DB_PATH)
-if db_dir:
-    os.makedirs(db_dir, exist_ok=True)
+ADMIN_KEY = os.getenv("ADMIN_KEY")  # ตั้งค่าใน Render/เครื่องคุณ เช่น tpbadmin2025
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_DB_PATH = BASE_DIR / "data" / "checkin.db"
+DB_PATH = Path(os.getenv("CHECKIN_DB", DEFAULT_DB_PATH))
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 # -----------------------------
 # FastAPI app & CORS
