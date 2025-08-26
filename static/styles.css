@@ -96,7 +96,7 @@ input[type="text"]:focus{ box-shadow:0 4px 10px #ffe957bb; }
   80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #ff5757cc);}
   100%{stroke:#144bfd; filter:drop-shadow(0 0 16px #5776ffcc);}
 }
-.seat-highlight{ stroke:#fd5959 !important; stroke-width:7px !important; filter:drop-shadow(0 0 22px #577effcc); animation:seat-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate; }
+.seat-highlight{ stroke:#000000 !important; stroke-width:4px !important; filter:drop-shadow(0 0 22px #577effcc); animation:seat-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate; }
 
 @keyframes seat-fill-blink{
   0%{fill:#3078ff; filter:drop-shadow(0 0 18px #ffe95766);}

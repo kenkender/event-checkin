@@ -23,12 +23,12 @@ function ensureHighlightStyles(svgDoc){
       0%{stroke:#b2c0ff; filter:drop-shadow(0 0 16px #579aff);}
       40%{stroke:#ff5b5b; filter:drop-shadow(0 0 32px #e32c2c);}
       60%{stroke:#5792ff; filter:drop-shadow(0 0 42px #5784ff);}
-      80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #ff5757);}
+      80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #a8ff57ff);}
       100%{stroke:#144bfd; filter:drop-shadow(0 0 16px #5776ff);}
     }
     .seat-highlight{
       stroke:#fd5959 !important;
-      stroke-width:7px !important;
+      stroke-width:4px !important;
       filter:drop-shadow(0 0 22px #577eff);
       animation:seat-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
     }
