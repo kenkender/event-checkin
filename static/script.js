@@ -33,27 +33,15 @@ function ensureHighlightStyles(svgDoc){
       animation:seat-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
     }
     @keyframes seat-fill-blink{
-      0%{fill:#3078ff; filter:drop-shadow(0 0 18px #ffe957);}
-      40%{fill:#e32c2c; filter:drop-shadow(0 0 36px #e32c2c);}
-      60%{fill:#5776ff; filter:drop-shadow(0 0 46px #ffe957);}
-      80%{fill:#ff5d57; filter:drop-shadow(0 0 24px #ffe957);}
-      100%{fill:#578cff; filter:drop-shadow(0 0 16px #ffe957);}
+      0%,100%{fill:#ff95e8;}
+      50%{fill:#ff5b5b;}
     }
     rect.seat-bg-highlight,
     circle.seat-bg-highlight,
     ellipse.seat-bg-highlight,
     path.seat-bg-highlight,
     polygon.seat-bg-highlight{
-      fill:#ff95e8 !important;
-      animation:seat-fill-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
-      
-    @keyframes pulse-bg{
-     0%,100%{ background-color:transparent; }
-    50%{ background-color:rgba(255,233,87,.35); }
-    }
-    .pulse-ani{
-    animation:pulse-bg .8s ease-in-out 2;
-    }
+      animation:seat-fill-blink .7s steps(2, start) infinite;
     }
   `;
   svgDoc.documentElement.appendChild(style);
