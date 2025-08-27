@@ -46,6 +46,14 @@ function ensureHighlightStyles(svgDoc){
     polygon.seat-bg-highlight{
       fill:#ff95e8 !important;
       animation:seat-fill-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
+      
+    @keyframes pulse-bg{
+     0%,100%{ background-color:transparent; }
+    50%{ background-color:rgba(255,233,87,.35); }
+    }
+    .pulse-ani{
+    animation:pulse-bg .8s ease-in-out 2;
+    }
     }
   `;
   svgDoc.documentElement.appendChild(style);
