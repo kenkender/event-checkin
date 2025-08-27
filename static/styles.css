@@ -73,6 +73,14 @@ input[type="text"]:focus{ box-shadow:0 4px 10px #ffe957bb; }
 
 #result{ margin-top:18px; font-size:1.17rem; font-weight:700; text-align:center; min-height:38px; transition:color .28s, text-shadow .28s; }
 
+@keyframes pulse-bg{
+  0%,100%{ background-color:transparent; }
+  50%{ background-color:rgba(255,233,87,.35); }
+}
+.pulse-ani{
+  animation:pulse-bg .8s ease-in-out 2;
+}
+
 /* Seating map (embed) */
 /* Seating map (embed) */
 #seating-map{
