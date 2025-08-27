@@ -144,6 +144,19 @@ def load_guests():
     return result
 
 
+def save_guests_to_csv():
+    """Dump current guests to guests.csv so data survives restarts."""
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT display_name, seat, seat_en FROM guests ORDER BY seat, display_name"
+        ).fetchall()
+    with open("guests.csv", "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["name", "seat", "seat_en"])
+        for r in rows:
+            writer.writerow([r["display_name"], r["seat"], r["seat_en"]])
+
+
 # -----------------------------
 # Startup
 # -----------------------------
@@ -309,6 +322,7 @@ def api_admin_add_guest(
         )
         conn.commit()
 
+    save_guests_to_csv()
     return {"ok": True}
 
 @app.put("/api/admin/guest/{name_key}")
@@ -351,6 +365,7 @@ def api_admin_update_guest(
         )
         conn.commit()
 
+    save_guests_to_csv()
     return {"ok": True}
 
 
@@ -360,6 +375,7 @@ def api_admin_delete_guest(request: Request, name_key: str):
     with get_conn() as conn:
         conn.execute("DELETE FROM guests WHERE name_key=?", (name_key,))
         conn.commit()
+    save_guests_to_csv()
     return {"ok": True}
 
 
