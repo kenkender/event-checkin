@@ -2,9 +2,16 @@
 import sqlite3, os, pathlib
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "data"
-DB_PATH.mkdir(exist_ok=True)
-DB_FILE = DB_PATH / "checkin.db"
+
+# Runtime data directory; default to /data for persistence but allow
+# overriding via CHECKIN_DATA_DIR or CHECKIN_DB environment variables.
+DATA_DIR = pathlib.Path(os.getenv("CHECKIN_DATA_DIR", "/data"))
+if not DATA_DIR.is_absolute():
+    DATA_DIR = BASE_DIR / DATA_DIR
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+DB_FILE = pathlib.Path(os.getenv("CHECKIN_DB", DATA_DIR / "checkin.db"))
+DB_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 def get_conn():
     conn = sqlite3.connect(DB_FILE)

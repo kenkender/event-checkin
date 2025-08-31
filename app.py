@@ -26,8 +26,12 @@ TH_TZ = timezone(timedelta(hours=7))
 ADMIN_KEY = os.getenv("ADMIN_KEY")  # ตั้งค่าใน Render/เครื่องคุณ เช่น tpbadmin2025
 BASE_DIR = Path(__file__).resolve().parent
 
-# Directory for runtime data (สามารถตั้งค่า CHECKIN_DATA_DIR=/data บน Render ได้)
-DATA_DIR = Path(os.getenv("CHECKIN_DATA_DIR", BASE_DIR / "data"))
+# Directory for runtime data.  By default use "/data" so information
+# survives redeploys on platforms that provide a persistent volume at
+# that location.  If CHECKIN_DATA_DIR is set it will override this.
+DATA_DIR = Path(os.getenv("CHECKIN_DATA_DIR", "/data"))
+if not DATA_DIR.is_absolute():
+    DATA_DIR = BASE_DIR / DATA_DIR
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 DB_PATH = Path(os.getenv("CHECKIN_DB", DATA_DIR / "checkin.db"))
@@ -168,21 +172,7 @@ def save_guests_to_csv():
         writer.writerow(["name", "seat", "seat_en"])
         for r in rows:
             writer.writerow([r["display_name"], r["seat"], r["seat_en"]])
-
-
-def save_guests_to_csv():
-    """Dump current guests to guests.csv so data survives restarts."""
-    with get_conn() as conn:
-        rows = conn.execute(
-            "SELECT display_name, seat, seat_en FROM guests ORDER BY seat, display_name"
-        ).fetchall()
-    with open("guests.csv", "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(["name", "seat", "seat_en"])
-        for r in rows:
-            writer.writerow([r["display_name"], r["seat"], r["seat_en"]])
-
-
+            
 # -----------------------------
 # Startup
 # -----------------------------
