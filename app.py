@@ -193,7 +193,7 @@ def on_startup():
 # -----------------------------
 # Admin utils
 # -----------------------------
-SEAT_PATTERN = re.compile(r"^[A-N][1-9]$", re.IGNORECASE)
+SEAT_PATTERN = re.compile(r"^[A-L][1-9]$", re.IGNORECASE)
 
 def admin_guard(request: Request):
     if not ADMIN_KEY:
@@ -204,7 +204,7 @@ def admin_guard(request: Request):
 def normalize_seat(s: str) -> str:
     s = (s or "").strip().upper()
     if not SEAT_PATTERN.match(s):
-        raise HTTPException(status_code=400, detail="Seat must be A1..L9")
+        raise HTTPException(status_code=400, detail="Seat must be A1..N9")
     return s
 
 def seat_to_en(s: str) -> str:
@@ -331,8 +331,8 @@ def api_admin_add_guest(
         raise HTTPException(status_code=400, detail="name/seat is required")
 
     import re
-    if not re.fullmatch(r"[A-L][1-9]", seat):
-        raise HTTPException(status_code=400, detail="Seat must be like A1..L9")
+    if not re.fullmatch(r"[A-N][1-9]", seat):
+        raise HTTPException(status_code=400, detail="Seat must be A1..N9")
 
     with get_conn() as conn:
 
