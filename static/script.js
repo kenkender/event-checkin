@@ -23,29 +23,25 @@ function ensureHighlightStyles(svgDoc){
       0%{stroke:#b2c0ff; filter:drop-shadow(0 0 16px #579aff);}
       40%{stroke:#ff5b5b; filter:drop-shadow(0 0 32px #e32c2c);}
       60%{stroke:#5792ff; filter:drop-shadow(0 0 42px #5784ff);}
-      80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #ff5757);}
+      80%{stroke:#ff3939; filter:drop-shadow(0 0 22px #a8ff57ff);}
       100%{stroke:#144bfd; filter:drop-shadow(0 0 16px #5776ff);}
     }
     .seat-highlight{
       stroke:#fd5959 !important;
-      stroke-width:7px !important;
+      stroke-width:4px !important;
       filter:drop-shadow(0 0 22px #577eff);
       animation:seat-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
     }
     @keyframes seat-fill-blink{
-      0%{fill:#3078ff; filter:drop-shadow(0 0 18px #ffe957);}
-      40%{fill:#e32c2c; filter:drop-shadow(0 0 36px #e32c2c);}
-      60%{fill:#5776ff; filter:drop-shadow(0 0 46px #ffe957);}
-      80%{fill:#ff5d57; filter:drop-shadow(0 0 24px #ffe957);}
-      100%{fill:#578cff; filter:drop-shadow(0 0 16px #ffe957);}
+      0%,100%{fill:#ff95e8;}
+      50%{fill:#ff5b5b;}
     }
     rect.seat-bg-highlight,
     circle.seat-bg-highlight,
     ellipse.seat-bg-highlight,
     path.seat-bg-highlight,
     polygon.seat-bg-highlight{
-      fill:#ff95e8 !important;
-      animation:seat-fill-blink .7s cubic-bezier(.7,.1,1,1.1) infinite alternate;
+      animation:seat-fill-blink .7s steps(2, start) infinite;
     }
   `;
   svgDoc.documentElement.appendChild(style);

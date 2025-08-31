@@ -1,7 +1,8 @@
 # db.py
 import sqlite3, os, pathlib
 
-DB_PATH = pathlib.Path("data")
+BASE_DIR = pathlib.Path(__file__).resolve().parent
+DB_PATH = BASE_DIR / "data"
 DB_PATH.mkdir(exist_ok=True)
 DB_FILE = DB_PATH / "checkin.db"
 

@@ -10,10 +10,12 @@ import os
 import csv
 import sqlite3
 import re
+import shutil
 from contextlib import contextmanager
 from datetime import datetime, timezone, timedelta
 from fastapi import Body
 from fastapi import Response
+from pathlib import Path
 
 # ----- Timezone: Thailand (+07:00)
 TH_TZ = timezone(timedelta(hours=7))
@@ -21,9 +23,23 @@ TH_TZ = timezone(timedelta(hours=7))
 # -----------------------------
 # Environment
 # -----------------------------
-ADMIN_KEY = os.getenv("ADMIN_KEY")              # ตั้งค่าใน Render/เครื่องคุณ เช่น tpbadmin2025
-DB_PATH   = os.getenv("CHECKIN_DB", "/tmp/checkins.db")
-os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+ADMIN_KEY = os.getenv("ADMIN_KEY")  # ตั้งค่าใน Render/เครื่องคุณ เช่น tpbadmin2025
+BASE_DIR = Path(__file__).resolve().parent
+
+# Directory for runtime data (สามารถตั้งค่า CHECKIN_DATA_DIR=/data บน Render ได้)
+DATA_DIR = Path(os.getenv("CHECKIN_DATA_DIR", BASE_DIR / "data"))
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+DB_PATH = Path(os.getenv("CHECKIN_DB", DATA_DIR / "checkin.db"))
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+# guests.csv path (เก็บรายชื่อปัจจุบัน)
+GUEST_CSV_PATH = Path(os.getenv("GUESTS_CSV", DATA_DIR / "guests.csv"))
+
+# ถ้ายังไม่มีไฟล์ guests.csv ใน DATA_DIR ให้ copy จากไฟล์ default ที่อยู่ใน repo
+DEFAULT_GUEST_CSV = BASE_DIR / "guests.csv"
+if not GUEST_CSV_PATH.exists() and DEFAULT_GUEST_CSV.exists():
+    shutil.copy(DEFAULT_GUEST_CSV, GUEST_CSV_PATH)
 
 # -----------------------------
 # FastAPI app & CORS
@@ -87,7 +103,7 @@ def init_db():
         count = conn.execute("SELECT COUNT(*) AS c FROM guests").fetchone()["c"]
         if count == 0:
             try:
-                with open("guests.csv", encoding="utf-8") as f:
+                with open(GUEST_CSV_PATH, encoding="utf-8") as f:
                     reader = csv.DictReader(f)
                     rows = []
                     for r in reader:
@@ -125,7 +141,7 @@ def load_guests():
 
     # fallback: CSV (เผื่อ DB ว่าง)
     try:
-        with open("guests.csv", encoding="utf-8") as f:
+        with open(GUEST_CSV_PATH, encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for r in reader:
                 k = (r.get("name") or "").strip().lower()
@@ -139,6 +155,32 @@ def load_guests():
     except FileNotFoundError:
         pass
     return result
+
+
+def save_guests_to_csv():
+    """Dump current guests to guests.csv so data survives restarts."""
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT display_name, seat, seat_en FROM guests ORDER BY seat, display_name"
+        ).fetchall()
+    with open(GUEST_CSV_PATH, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["name", "seat", "seat_en"])
+        for r in rows:
+            writer.writerow([r["display_name"], r["seat"], r["seat_en"]])
+
+
+def save_guests_to_csv():
+    """Dump current guests to guests.csv so data survives restarts."""
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT display_name, seat, seat_en FROM guests ORDER BY seat, display_name"
+        ).fetchall()
+    with open("guests.csv", "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["name", "seat", "seat_en"])
+        for r in rows:
+            writer.writerow([r["display_name"], r["seat"], r["seat_en"]])
 
 
 # -----------------------------
@@ -306,6 +348,7 @@ def api_admin_add_guest(
         )
         conn.commit()
 
+    save_guests_to_csv()
     return {"ok": True}
 
 @app.put("/api/admin/guest/{name_key}")
@@ -348,6 +391,7 @@ def api_admin_update_guest(
         )
         conn.commit()
 
+    save_guests_to_csv()
     return {"ok": True}
 
 
@@ -357,6 +401,7 @@ def api_admin_delete_guest(request: Request, name_key: str):
     with get_conn() as conn:
         conn.execute("DELETE FROM guests WHERE name_key=?", (name_key,))
         conn.commit()
+    save_guests_to_csv()
     return {"ok": True}
 
 
