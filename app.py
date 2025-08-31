@@ -151,7 +151,7 @@ def on_startup():
 # -----------------------------
 # Admin utils
 # -----------------------------
-SEAT_PATTERN = re.compile(r"^[A-L][1-9]$", re.IGNORECASE)
+SEAT_PATTERN = re.compile(r"^[A-N][1-9]$", re.IGNORECASE)
 
 def admin_guard(request: Request):
     if not ADMIN_KEY:

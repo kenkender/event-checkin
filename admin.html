@@ -160,7 +160,7 @@
 
     /* ---------- fill A–L & 1–9 ---------- */
     (function fillSeatSelectors(){
-      const letters = 'ABCDEFGHIJKL'.split('');
+      const letters = 'ABCDEFGHIJKLMN'.split('');
       selTable.innerHTML = letters.map(l => `<option value="${l}">${l}</option>`).join('');
       selNo.innerHTML = Array.from({length:9}, (_,i)=>i+1)
         .map(n => `<option value="${n}">${n}</option>`).join('');
